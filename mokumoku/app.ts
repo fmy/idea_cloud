@@ -5,8 +5,3 @@ class App {
         this.controller = new control.StageController();
     }
 }
-
-
-window.onload = () => {
-    new App();
-};

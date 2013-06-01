@@ -21,3 +21,4 @@ var Shapes;
 var p = new Shapes.Point(3, 4);
 var dist = p.getDist();
 //@ sourceMappingURL=Controller.js.map
+

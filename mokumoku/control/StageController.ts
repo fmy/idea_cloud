@@ -5,7 +5,7 @@ module control {
     export class StageController extends createjs.EventDispatcher {
         view: view.StageView;
         model: model.StageModel;
-        constructor() {
+        constructor(public stageID:string) {
             super();
             this.preLoad();
         }
