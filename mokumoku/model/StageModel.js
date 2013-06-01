@@ -7,8 +7,9 @@ var model;
 (function (model) {
     var StageModel = (function (_super) {
         __extends(StageModel, _super);
-        function StageModel() {
+        function StageModel(stage_id) {
                 _super.call(this);
+            this.stage_id = stage_id;
             this.wordList = [];
         }
         StageModel.prototype.getWordList = function () {
@@ -23,7 +24,16 @@ var model;
         StageModel.prototype.isDisConect = function (wordA, wordB) {
             return true;
         };
+        StageModel.prototype.wordConnect = function (wordA, wordB) {
+            return true;
+        };
         StageModel.prototype.loadResource = function () {
+            var _this = this;
+            var data = '{"id": 1,"name": "level1","words": [{"id": 1,"name": "ごはん"},{"id": 2,"name": "たらこ"},{"id": 3,"name": "パスタ"},{"id": 4,"name": "みそ汁"}]}';
+            JSON.parse(data).words.each(function (word) {
+                var w = new model.WordData(word.id, word.name);
+                _this.wordList.push(w);
+            });
             this.loadedResource();
         };
         StageModel.prototype.loadedResource = function () {

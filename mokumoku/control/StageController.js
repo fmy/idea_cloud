@@ -7,8 +7,9 @@ var control;
 (function (control) {
     var StageController = (function (_super) {
         __extends(StageController, _super);
-        function StageController() {
+        function StageController(stageID) {
                 _super.call(this);
+            this.stageID = stageID;
             this.preLoad();
         }
         StageController.prototype.preLoad = function () {
