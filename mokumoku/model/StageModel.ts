@@ -3,6 +3,13 @@
 /// <reference path="word.ts" />
 module model {
     export class StageModel extends createjs.EventDispatcher {
+        wordList: WordData[];
+
+        constructor() {
+            super();
+            this.wordList = [];
+        }
+
         isConnect(wordA: WordData, wordB: WordData): bool {
             return true;
         }
