@@ -5,7 +5,7 @@
  * Time: 13:19
  * To change this template use File | Settings | File Templates.
  */
-module mokumoku {
+module model {
     export class WordData {
 
 
