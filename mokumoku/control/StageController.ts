@@ -6,13 +6,27 @@ module control {
         view: view.StageView;
         model: model.StageModel;
         constructor() {
+            super();
+            this.preLoad();
+        }
+
+        private preLoad(): void {
             this.model = new model.StageModel();
+            
+            this.model.addEventListener(events.Event.COMPLETE, (e: Event): void => {
+                this.view.loadResource();
+            });
             this.view = new view.StageView(this.model);
-            this.init();
+            this.view.addEventListener(events.Event.COMPLETE, (e: Event): void => {
+                this.init();
+            });
+
+            this.model.loadResource();
         }
 
         private init(): void {
-            this.model.loadResource();
+
         }
+
     }
 }

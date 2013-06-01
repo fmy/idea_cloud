@@ -1,3 +1,4 @@
+/// <reference path="../events/Event.ts" />
 /// <reference path="../lib/CreateJS.d.ts" />
 module view {
     
@@ -10,7 +11,7 @@ module view {
 
         }
         private loadedResource():void{
-
+            this.dispatchEvent(new events.Event(events.Event.COMPLETE), this);
         }
 
     }

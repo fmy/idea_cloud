@@ -1,4 +1,5 @@
 /// <reference path="../lib/CreateJS.d.ts" />
+/// <reference path="../events/Event.ts" />
 /// <reference path="word.ts" />
 module model {
     export class StageModel extends createjs.EventDispatcher {
@@ -14,7 +15,7 @@ module model {
 
         }
         private loadedResource():void{
-
+            this.dispatchEvent(new events.Event(events.Event.COMPLETE), this);
         }
     }
 }
