@@ -8,6 +8,7 @@ var events;
             this.value = value;
         }
         Event.COMPLETE = "complete";
+        Event.CHANGE_PROPERTY = "changeProperty";
         return Event;
     })();
     events.Event = Event;    

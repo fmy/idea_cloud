@@ -28,5 +28,12 @@ module control {
 
         }
 
+          wordConnect(wordA:model.WordData, wordB:model.WordData): void{
+              if(this.model.isConnect(wordA, wordB)) {
+
+              }
+
+           }
+
     }
 }
