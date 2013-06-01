@@ -1,3 +1,4 @@
+/// <reference path="word.ts" />
 var model;
 (function (model) {
     var StageModel = (function () {

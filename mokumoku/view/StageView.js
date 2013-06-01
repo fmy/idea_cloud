@@ -4,7 +4,10 @@ var view;
         function StageView(model) {
             this.model = model;
         }
-        StageView.prototype.preload = function () {
+        StageView.prototype.loadResource = function () {
+            this.loadedResource();
+        };
+        StageView.prototype.loadedResource = function () {
         };
         return StageView;
     })();

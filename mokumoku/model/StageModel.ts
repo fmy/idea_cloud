@@ -1,6 +1,7 @@
+/// <reference path="../lib/CreateJS.d.ts" />
 /// <reference path="word.ts" />
 module model {
-    export class StageModel {
+    export class StageModel extends createjs.EventDispatcher {
         isConnect(wordA: WordData, wordB: WordData): bool {
             return true;
         }
