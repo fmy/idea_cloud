@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  first_word_id: 1
+  second_word_id: 1
+  type: 1
+
+two:
+  first_word_id: 1
+  second_word_id: 1
+  type: 1
