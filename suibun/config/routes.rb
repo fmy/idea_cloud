@@ -2,7 +2,7 @@ Suibun::Application.routes.draw do
   namespace :api, defaults: {format: 'json'} do
 
     get "words/create"
-    get "words/connect"
+    get "words/:id/connection", to: "words#connection"
 
     get "stages/create"
     get "stages/:id", to: "stages#index"
