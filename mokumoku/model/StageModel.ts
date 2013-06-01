@@ -8,5 +8,12 @@ module model {
         isDisConect(wordA: WordData, wordB: WordData): bool {
             return true;
         }
+        loadResource():void{
+            this.loadedResource();
+
+        }
+        private loadedResource():void{
+
+        }
     }
 }

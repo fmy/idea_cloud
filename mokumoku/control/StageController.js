@@ -1,11 +1,12 @@
-/// <reference path="../view/StageView.ts" />
-/// <reference path="../model/StageModel.ts" />
 var control;
 (function (control) {
-    var Controller = (function () {
-        function Controller() { }
-        return Controller;
+    var StageController = (function () {
+        function StageController() {
+            this.model = new model.StageModel();
+            this.view = new view.StageView(this.model);
+        }
+        return StageController;
     })();
-    control.Controller = Controller;    
+    control.StageController = StageController;    
 })(control || (control = {}));
 //@ sourceMappingURL=StageController.js.map

@@ -4,5 +4,13 @@ module view {
         constructor(public model: model.StageModel) {
 
         }
+        loadResource():void{
+            this.loadedResource();
+
+        }
+        private loadedResource():void{
+
+        }
+
     }
 }

@@ -1,7 +1,11 @@
 var view;
 (function (view) {
     var StageView = (function () {
-        function StageView() { }
+        function StageView(model) {
+            this.model = model;
+        }
+        StageView.prototype.preload = function () {
+        };
         return StageView;
     })();
     view.StageView = StageView;    
