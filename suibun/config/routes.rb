@@ -1,4 +1,14 @@
 Suibun::Application.routes.draw do
+  namespace :api, defaults: {format: 'json'} do
+
+    get "words/create"
+    get "words/connect"
+
+    get "stages/create"
+    get "stages/:id", to: "stages#index"
+
+  end
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

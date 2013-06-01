@@ -6,9 +6,12 @@ class Word < ActiveRecord::Base
   has_many :word_reverse_connections, foreign_key: :connect_word_id, class_name: "WordConnection", dependent: :destroy
   has_many :connected_words, through: :word_reverse_connections
 
-
   def connect(other_word)
     word_connections.create(connect_word_id: other_word.id)
+  end
+
+  def connect?(other_word)
+    connection = word_connections.find_by_connect_word_id(other_word.id) || word_reverse_connections.find_by_word_id(other_word.id)
   end
 
   def connect_words
