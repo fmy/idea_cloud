@@ -1,7 +1,12 @@
 var events;
 (function (events) {
     var Event = (function () {
-        function Event() { }
+        function Event(type, value) {
+            if (typeof type === "undefined") { type = null; }
+            if (typeof value === "undefined") { value = null; }
+            this.type = type;
+            this.value = value;
+        }
         Event.COMPLETE = "complete";
         return Event;
     })();

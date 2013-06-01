@@ -11,12 +11,22 @@ var control;
     var StageController = (function (_super) {
         __extends(StageController, _super);
         function StageController() {
-            this.model = new model.StageModel();
-            this.view = new view.StageView(this.model);
-            this.init();
+                _super.call(this);
+            this.preLoad();
         }
-        StageController.prototype.init = function () {
+        StageController.prototype.preLoad = function () {
+            var _this = this;
+            this.model = new model.StageModel();
+            this.model.addEventListener(events.Event.COMPLETE, function (e) {
+                _this.view.loadResource();
+            });
+            this.view = new view.StageView(this.model);
+            this.view.addEventListener(events.Event.COMPLETE, function (e) {
+                _this.init();
+            });
             this.model.loadResource();
+        };
+        StageController.prototype.init = function () {
         };
         return StageController;
     })(createjs.EventDispatcher);
