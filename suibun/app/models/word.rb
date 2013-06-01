@@ -7,13 +7,17 @@ class Word < ActiveRecord::Base
   has_many :connected_words, through: :word_reverse_connections
 
   # connectは一方通行なので両方向作る
-  def connect(other_word, status = 1)
+  def connect(other_word, status = 0)
     word_connections.create(connect_word_id: other_word.id, status: status)
     other_word.word_connections.create(connect_word_id: self.id, status: status)
   end
 
   def connect?(other_word)
     connection = word_connections.find_by_connect_word_id(other_word.id)
+  end
+
+  def to_hash
+    ActiveSupport::JSON.decode(self.to_json)
   end
 
 end

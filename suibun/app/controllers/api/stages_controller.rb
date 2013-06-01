@@ -8,7 +8,8 @@ module Api
     end
 
     def index
-      respond_with Stage.find(params[:id]).to_json(only: [:id, :name], include: {words: {only: [:id, :name]}})
+      respond_with Stage.find(params[:id])
+      .to_json(only: [:id, :name], include: {words: {only: [:id, :name]}})
     end
 
   end
