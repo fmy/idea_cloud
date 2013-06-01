@@ -9,7 +9,7 @@ var mokumoku;
         function App() {
         }
         App.prototype.show = function () {
-            alert("test3333");
+            alert("tes");
         };
         return App;
     })();

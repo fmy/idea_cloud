@@ -4,7 +4,7 @@ module mokumoku {
 
         }
         show():void {
-            alert("test3333");
+            alert("tes");
         }
     }
 
