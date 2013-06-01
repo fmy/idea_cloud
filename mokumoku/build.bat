@@ -1,1 +1,1 @@
-{\rtf1}
+tsc app.ts --out js/app.js
