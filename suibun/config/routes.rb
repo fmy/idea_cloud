@@ -1,13 +1,13 @@
 Suibun::Application.routes.draw do
   namespace :api, defaults: {format: 'json'} do
 
-    post "words/create", to: "words#create"
+    match "words/create", to: "words#create"
     get "words/:id/connection", to: "words#connection"
 
-    post "stages/create", to: "words#create"
+    match "stages/create", to: "stages#create"
     get "stages/:id", to: "stages#index"
 
-    post "connections/create", to: "words#create_connections"
+    match "connections/create", to: "words#create_connections"
   end
 
   # The priority is based upon order of creation:

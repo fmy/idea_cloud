@@ -18,12 +18,13 @@ module Api
     end
 
     def create_connections
-      params["connections"].split("|").each do |c|
-        w1, w2, st = c.split(",")
-        WordConnection.create(w1, w2, st)
-        WordConnection.create(w2, w1, st)
+      params["connections"].split(":").each do |p|
+        w1, w2, st = p.split(",")
+        st ||= 0
+        con1  = WordConnection.where(word_id: w1, connect_word_id: w2, status: st).first_or_create
+        con2 = WordConnection.where(word_id: w2, connect_word_id: w1, status: st).first_or_create
       end
-
+      respond_with "200"
     end
   end
 end
