@@ -6,6 +6,7 @@ Suibun::Application.routes.draw do
 
     match "stages/create", to: "stages#create"
     get "stages/:id", to: "stages#index"
+    get "stages/:id/add_word", to: "stages#add_word"
 
     match "connections/create", to: "words#create_connections"
   end
