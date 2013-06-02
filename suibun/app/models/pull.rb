@@ -1,6 +1,6 @@
 class Pull
   def self.pull_and_restart
-    system("cd /home/ubuntu/idea_cloud && git pull && rake db:migrate && sudo service suibun stop && sudo service suibun start")
+    spawn("exec /home/ubuntu/idea_cloud/suibun/sugoi.sh")
   end
 end
 
