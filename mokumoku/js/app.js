@@ -34,8 +34,10 @@ var view;
     var WordView = (function (_super) {
         __extends(WordView, _super);
         function WordView(word) {
+            var _this = this;
                 _super.call(this);
             this.size = 50;
+            this.dragPoint = null;
             this.shape = new createjs.Shape();
             this.text = new createjs.Text();
             this.addChild(this.shape);
@@ -43,7 +45,26 @@ var view;
             this.dataID = word.id;
             this.toDraw();
             this.name = word.id.toString();
+            this.addEventListener("mousedown", function (e) {
+                _this.startDrag(e);
+            });
+            this.addEventListener("mouseup", this.stopDrag);
         }
+        WordView.prototype.startDrag = function (e) {
+            e.addEventListener("mousemove", this.drag);
+        };
+        WordView.prototype.stopDrag = function (eventObject) {
+            this.removeEventListener("mousemove", this.drag);
+            this.removeEventListener("mouseup", this.stopDrag);
+        };
+        WordView.prototype.drag = function (eventObject) {
+            var instance = eventObject.target;
+            instance.x = eventObject.stageX;
+            instance.y = eventObject.stageY;
+            instance.update();
+        };
+        WordView.prototype.update = function () {
+        };
         WordView.prototype.getData = function () {
             return control.StageController.getInstance().model.getWord(this.dataID);
         };
@@ -56,6 +77,8 @@ var view;
             this.text.text = this.getData().name;
             this.text.x = this.size - this.text.getMeasuredWidth() / 2;
             this.text.y = this.size - this.text.getMeasuredHeight() / 2;
+        };
+        WordView.prototype.press = function (e) {
         };
         return WordView;
     })(createjs.Container);
@@ -86,6 +109,7 @@ var view;
             this.loadedResource();
         };
         StageView.prototype.update = function () {
+            var _this = this;
             var wordList = this.model.getWordList();
             console.log(wordList.length);
             for(var i = 0; i < wordList.length; i++) {
@@ -101,6 +125,9 @@ var view;
                 wordView.y = y * 120;
                 console.log(word.name + " : " + wordView.x + " : " + wordView.y + " :: " + xLength);
                 this.stage.addChild(wordView);
+                wordView.update = function () {
+                    _this.stage.update();
+                };
             }
             this.stage.update();
         };

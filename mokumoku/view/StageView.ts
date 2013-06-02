@@ -41,6 +41,9 @@ module view {
                 wordView.y = y * 120;
                 console.log(word.name + " : " + wordView.x + " : " + wordView.y + " :: " + xLength);
                 this.stage.addChild(wordView);
+                wordView.update = () => {
+                    this.stage.update();
+                }
             }
             this.stage.update();
         }
