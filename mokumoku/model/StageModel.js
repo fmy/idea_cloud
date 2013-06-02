@@ -21,28 +21,30 @@ var model;
             return this.wordHash[wordID];
         };
         StageModel.prototype.isConnect = function (wordA, wordB) {
+            var result = false;
             for(var prop in this.connections) {
                 var connection = this.connections[prop];
                 if(connection.first_id == wordA.id && connection.second_id == wordB.id) {
                     if(connection.status == 1) {
-                        return true;
-                    } else {
-                        return false;
+                        result = true;
                     }
+                    break;
                 }
             }
+            return result;
         };
         StageModel.prototype.isDisConnect = function (wordA, wordB) {
+            var result = false;
             for(var prop in this.connections) {
                 var connection = this.connections[prop];
                 if(connection.first_id == wordA.id && connection.second_id == wordB.id) {
                     if(connection.status == -1) {
-                        return true;
-                    } else {
-                        return false;
+                        result = true;
                     }
+                    break;
                 }
             }
+            return result;
         };
         StageModel.prototype.wordConnect = function (wordA, wordB) {
             return true;
@@ -133,7 +135,6 @@ var model;
                     }
                 ]
             };
-            var data = '{"id": 1,"name": "level1","words": [{"id": 1,"name": "ごはん"},{"id": 2,"name": "たらこ"},{"id": 3,"name": "パスタ"},{"id": 4,"name": "みそ汁"}]}';
             $(json.words).each(function (index, word) {
                 var w = new model.WordData(word.id, word.name);
                 _this.wordList.push(w);
