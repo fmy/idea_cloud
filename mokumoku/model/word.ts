@@ -9,7 +9,7 @@ module model {
     export class WordData {
 
 
-        constructor(public id:number, name:string) {
+        constructor(public id:number, public name:string) {
 
         }
     }

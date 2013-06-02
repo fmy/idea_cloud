@@ -2,6 +2,6 @@
 class App {
     controller: control.StageController;
     constructor() {
-        this.controller = new control.StageController();
+        this.controller = new control.StageController("myCanvas");
     }
 }

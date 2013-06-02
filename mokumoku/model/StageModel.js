@@ -1,4 +1,4 @@
-var __extends = this.__extends || function (d, b) {
+﻿var __extends = this.__extends || function (d, b) {
     function __() { this.constructor = d; }
     __.prototype = b.prototype;
     d.prototype = new __();
@@ -29,7 +29,17 @@ var model;
         };
         StageModel.prototype.loadResource = function () {
             var _this = this;
-            var data = '{"id": 1,"name": "level1","words": [{"id": 1,"name": "ごはん"},{"id": 2,"name": "たらこ"},{"id": 3,"name": "パスタ"},{"id": 4,"name": "みそ汁"}]}';
+            //            $.ajax({
+            //                url: "http://0.0.0.0:3000/stages/" + this.stage_id,
+            //                type: "get",
+            //                dataType: "json"
+            //            }).done((data) => {
+            //                JSON.parse(data).words.each((word) => {
+            //                    var w = new WordData(word.id, word.name);
+            //                    this.wordList.push(w);
+            //                });
+            //            });
+            var data = '{"id": 1,"name": "level1","words": [{"id": 1,"name": "ã”ã¯ã‚“"},{"id": 2,"name": "ãŸã‚‰ã“"},{"id": 3,"name": "ãƒ‘ã‚¹ã‚¿"},{"id": 4,"name": "ã¿ãæ±"}]}';
             JSON.parse(data).words.each(function (word) {
                 var w = new model.WordData(word.id, word.name);
                 _this.wordList.push(w);
