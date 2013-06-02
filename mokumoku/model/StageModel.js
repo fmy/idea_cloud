@@ -1,4 +1,4 @@
-﻿var __extends = this.__extends || function (d, b) {
+var __extends = this.__extends || function (d, b) {
     function __() { this.constructor = d; }
     __.prototype = b.prototype;
     d.prototype = new __();
@@ -13,12 +13,19 @@ var model;
             this.wordList = [];
             this.wordHash = {
             };
+            this.score = 0;
         }
         StageModel.prototype.getWordList = function () {
             return this.wordList;
         };
         StageModel.prototype.getWord = function (wordID) {
             return this.wordHash[wordID];
+        };
+        StageModel.prototype.getScore = function () {
+            return this.score;
+        };
+        StageModel.prototype.changeScore = function (diff) {
+            return this.score = this.score + diff;
         };
         StageModel.prototype.isConnect = function (wordA, wordB) {
             var result = false;
@@ -51,16 +58,6 @@ var model;
         };
         StageModel.prototype.loadResource = function () {
             var _this = this;
-            //            $.ajax({
-            //                url: "http://0.0.0.0:3000/stages/" + this.stageID,
-            //                type: "get",
-            //                dataType: "json"
-            //            }).done((data) => {
-            //                JSON.parse(data).words.each((word) => {
-            //                    var w = new WordData(word.id, word.name);
-            //                    this.wordList.push(w);
-            //                });
-            //            });
             var json = {
                 "id": 1,
                 "name": "level1",

@@ -1,4 +1,4 @@
-﻿var events;
+var events;
 (function (events) {
     var Event = (function () {
         function Event(type, value) {
@@ -269,9 +269,11 @@ var view;
         };
         StageView.prototype.connectWord = function (wordA, wordB) {
             this.sound().playSE("success0" + this.rand());
+            this.score = this.model.changeScore(100);
         };
         StageView.prototype.disConnectWord = function (wordA, wordB) {
             this.sound().playSE("fault0" + this.rand());
+            this.score = this.model.changeScore(-100);
         };
         StageView.prototype.noConnectWord = function (wordA) {
             this.sound().playSE("no0" + this.rand());
@@ -291,12 +293,19 @@ var model;
             this.wordList = [];
             this.wordHash = {
             };
+            this.score = 0;
         }
         StageModel.prototype.getWordList = function () {
             return this.wordList;
         };
         StageModel.prototype.getWord = function (wordID) {
             return this.wordHash[wordID];
+        };
+        StageModel.prototype.getScore = function () {
+            return this.score;
+        };
+        StageModel.prototype.changeScore = function (diff) {
+            return this.score = this.score + diff;
         };
         StageModel.prototype.isConnect = function (wordA, wordB) {
             var result = false;

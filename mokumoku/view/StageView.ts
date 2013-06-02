@@ -8,6 +8,7 @@ module view {
     export class StageView extends createjs.EventDispatcher {
         private stage: createjs.Stage;
         private wordViewList: WordView[];
+        private score: number;
         constructor(public model: model.StageModel, public stageID:string) {
             super();
             this.init();
@@ -99,10 +100,12 @@ module view {
 
         connectWord(wordA: model.WordData, wordB: model.WordData): void {
             this.sound().playSE("success0" + this.rand());
+            this.score = this.model.changeScore(100);
         }
 
         disConnectWord(wordA: model.WordData, wordB: model.WordData): void {
             this.sound().playSE("fault0" + this.rand());
+            this.score = this.model.changeScore(-100);
         }
 
         noConnectWord(wordA: model.WordData): void {

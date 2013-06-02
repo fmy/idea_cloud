@@ -3,9 +3,6 @@ var __extends = this.__extends || function (d, b) {
     __.prototype = b.prototype;
     d.prototype = new __();
 };
-/// <reference path="../events/Event.ts" />
-/// <reference path="WordView.ts" />
-/// <reference path="../lib/CreateJS.d.ts" />
 var view;
 (function (view) {
     var StageView = (function (_super) {
@@ -27,6 +24,13 @@ var view;
                 _this.update();
             });
             this.wordViewList = [];
+            this.sound().addEventListener("complete", function () {
+                _this.dispatchEvent(new events.Event(events.Event.COMPLETE), _this);
+            });
+            this.sound().load();
+        };
+        StageView.prototype.sound = function () {
+            return view.SoundManager.getInstance();
         };
         StageView.prototype.loadResource = function () {
             this.loadedResource();
@@ -37,7 +41,6 @@ var view;
         StageView.prototype.firstCreate = function () {
             var _this = this;
             var wordList = this.model.getWordList();
-            console.log(wordList.length);
             for(var i = 0; i < wordList.length; i++) {
                 var word = wordList[i];
                 var xLength = Math.floor(this.stage.canvas.width / 120);
@@ -62,27 +65,6 @@ var view;
             this.update();
         };
         StageView.prototype.loadedResource = function () {
-            var _this = this;
-            var queue = new createjs.LoadQueue(false);
-            var manifest = [
-                {
-                    id: "success01",
-                    src: "se/con1.mp3"
-                }, 
-                {
-                    id: "success02",
-                    src: "se/con2.mp3"
-                }, 
-                {
-                    id: "success01",
-                    src: "se/con3.mp3"
-                }
-            ];
-            queue.installPlugin(createjs.Sound);
-            queue.loadManifest(manifest, true);
-            queue.addEventListener("complete", function (e) {
-                _this.dispatchEvent(new events.Event(events.Event.COMPLETE), _this);
-            });
         };
         StageView.prototype.woedDraged = function (target) {
             var result;
@@ -106,13 +88,20 @@ var view;
                 }, this);
             }
         };
+        StageView.prototype.rand = function () {
+            var rand = (Math.round(Math.random() * 3));
+            return rand;
+        };
         StageView.prototype.connectWord = function (wordA, wordB) {
-            console.log("kuttuki");
+            this.sound().playSE("success0" + this.rand());
+            this.score = this.model.changeScore(100);
         };
         StageView.prototype.disConnectWord = function (wordA, wordB) {
-            console.log("barabara");
+            this.sound().playSE("fault0" + this.rand());
+            this.score = this.model.changeScore(-100);
         };
         StageView.prototype.noConnectWord = function (wordA) {
+            this.sound().playSE("no0" + this.rand());
             (this.stage.getChildByName(wordA.id.toString())).resetDragPosition();
         };
         return StageView;

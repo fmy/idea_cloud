@@ -3,7 +3,6 @@ var __extends = this.__extends || function (d, b) {
     __.prototype = b.prototype;
     d.prototype = new __();
 };
-/// <reference path="../lib/CreateJS.d.ts" />
 var view;
 (function (view) {
     var IntaractionConainer = (function (_super) {

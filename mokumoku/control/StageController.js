@@ -3,9 +3,6 @@ var __extends = this.__extends || function (d, b) {
     __.prototype = b.prototype;
     d.prototype = new __();
 };
-/// <reference path="../lib/CreateJS.d.ts" />
-/// <reference path="../view/StageView.ts" />
-/// <reference path="../model/StageModel.ts" />
 var control;
 (function (control) {
     var StageController = (function (_super) {
