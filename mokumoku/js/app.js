@@ -1,4 +1,4 @@
-var events;
+﻿var events;
 (function (events) {
     var Event = (function () {
         function Event(type, value) {
@@ -465,6 +465,16 @@ var model;
                     }
                 ],
                 "connections": [
+                    {
+                        "first_id": 5,
+                        "second_id": 4,
+                        "status": 1
+                    }, 
+                    {
+                        "first_id": 4,
+                        "second_id": 5,
+                        "status": 1
+                    }, 
                     {
                         "first_id": 1,
                         "second_id": 2,
