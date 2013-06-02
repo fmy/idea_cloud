@@ -3,22 +3,31 @@ var __extends = this.__extends || function (d, b) {
     __.prototype = b.prototype;
     d.prototype = new __();
 };
-<<<<<<< Updated upstream
-=======
-/// <reference path="../events/Event.ts" />
-/// <reference path="WordView.ts" />
-/// <reference path="SoundManager.ts" />
-/// <reference path="../lib/CreateJS.d.ts" />
->>>>>>> Stashed changes
 var view;
 (function (view) {
     var StageView = (function (_super) {
         __extends(StageView, _super);
         function StageView(model, stageID) {
+            var _this = this;
                 _super.call(this);
             this.model = model;
             this.stageID = stageID;
             this.init();
+            this.effect = document.createElement("div");
+            this.effect.style.position = "absolute";
+            this.effect.style.width = "100%";
+            this.effect.style.height = "100%";
+            this.effect.style.left = "0px";
+            this.effect.style.top = "0px";
+            this.effectImg = document.createElement("img");
+            this.effect.appendChild(this.effectImg);
+            this.effectImg.style.width = "100%";
+            this.effectImg.style.height = "100%";
+            this.effect.style.display = "none";
+            document.body.appendChild(this.effect);
+            createjs.Ticker.addEventListener("tick", function () {
+                _this.stage.update();
+            });
         }
         StageView.prototype.init = function () {
             var _this = this;
@@ -27,23 +36,17 @@ var view;
             this.model.addEventListener(events.Event.COMPLETE, function (e) {
                 _this.firstCreate();
             });
-            this.model.addEventListener(events.Event.CHANGE_PROPERTY, function (e) {
-                _this.update();
-            });
             this.wordViewList = [];
-            this.sound().addEventListener("complete", function () {
+            this.resource().addEventListener("complete", function () {
                 _this.dispatchEvent(new events.Event(events.Event.COMPLETE), _this);
             });
-            this.sound().load();
+            this.resource().load();
         };
-        StageView.prototype.sound = function () {
-            return view.SoundManager.getInstance();
+        StageView.prototype.resource = function () {
+            return view.ResourceManager.getInstance();
         };
         StageView.prototype.loadResource = function () {
             this.loadedResource();
-        };
-        StageView.prototype.update = function () {
-            this.stage.update();
         };
         StageView.prototype.firstCreate = function () {
             var _this = this;
@@ -65,11 +68,7 @@ var view;
                 wordView.dragEnd = function (target) {
                     _this.woedDraged(target);
                 };
-                wordView.update = function () {
-                    _this.update();
-                };
             }
-            this.update();
         };
         StageView.prototype.loadedResource = function () {
         };
@@ -99,22 +98,33 @@ var view;
             var rand = (Math.round(Math.random() * 3));
             return rand;
         };
+        StageView.prototype.showEffect = function (id) {
+            var _this = this;
+            var resource = {
+                imgCon: "effect/con.png",
+                imgBara: "effect/bara.png"
+            };
+            this.effect.style.display = "block";
+            this.effectImg.src = resource[id];
+            setTimeout(function () {
+                _this.hideEffect();
+            }, 500);
+        };
+        StageView.prototype.hideEffect = function () {
+            this.effect.style.display = "none";
+        };
         StageView.prototype.connectWord = function (wordA, wordB) {
-            this.sound().playSE("success0" + this.rand());
-<<<<<<< Updated upstream
+            this.showEffect("imgCon");
+            this.resource().playSE("success0" + this.rand());
             this.model.connect(wordA.id, wordB.id);
         };
         StageView.prototype.disConnectWord = function (wordA, wordB) {
-            this.sound().playSE("fault0" + this.rand());
+            this.showEffect("imgBara");
+            this.resource().playSE("fault0" + this.rand());
             this.model.disConnect(wordA.id, wordB.id);
-=======
-        };
-        StageView.prototype.disConnectWord = function (wordA, wordB) {
-            this.sound().playSE("fault0" + this.rand());
->>>>>>> Stashed changes
         };
         StageView.prototype.noConnectWord = function (wordA) {
-            this.sound().playSE("no0" + this.rand());
+            this.resource().playSE("no0" + this.rand());
             (this.stage.getChildByName(wordA.id.toString())).resetDragPosition();
         };
         return StageView;

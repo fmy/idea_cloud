@@ -3,23 +3,22 @@ var __extends = this.__extends || function (d, b) {
     __.prototype = b.prototype;
     d.prototype = new __();
 };
-/// <reference path="../events/Event.ts" />
-/// <reference path="../lib/CreateJS.d.ts" />
 var view;
 (function (view) {
-    var SoundManager = (function (_super) {
-        __extends(SoundManager, _super);
-        function SoundManager() {
-            _super.apply(this, arguments);
-
+    var ResourceManager = (function (_super) {
+        __extends(ResourceManager, _super);
+        function ResourceManager() {
+                _super.call(this);
+            this.resource = {
+            };
         }
-        SoundManager.getInstance = function getInstance() {
-            if(SoundManager.instance == null) {
-                SoundManager.instance = new SoundManager();
+        ResourceManager.getInstance = function getInstance() {
+            if(ResourceManager.instance == null) {
+                ResourceManager.instance = new ResourceManager();
             }
-            return SoundManager.instance;
+            return ResourceManager.instance;
         };
-        SoundManager.prototype.load = function () {
+        ResourceManager.prototype.load = function () {
             var _this = this;
             var queue = new createjs.LoadQueue(false);
             var manifest = [
@@ -62,18 +61,29 @@ var view;
             ];
             queue.installPlugin(createjs.Sound);
             queue.loadManifest(manifest, true);
+            queue.addEventListener("fileload", function (e) {
+                var evt = e.item;
+                switch(evt.type) {
+                    case "image":
+                        _this.resource[evt.id] = new createjs.Bitmap(evt.src);
+                        break;
+                }
+            });
             queue.addEventListener("complete", function (e) {
                 _this.dispatchEvent(new events.Event(events.Event.COMPLETE), _this);
             });
         };
-        SoundManager.prototype.getSE = function (id) {
+        ResourceManager.prototype.getSE = function (id) {
             return createjs.Sound.createInstance(id);
         };
-        SoundManager.prototype.playSE = function (id) {
+        ResourceManager.prototype.playSE = function (id) {
             createjs.Sound.play(id);
         };
-        return SoundManager;
+        ResourceManager.prototype.getBmp = function (id) {
+            return this.resource[id];
+        };
+        return ResourceManager;
     })(createjs.EventDispatcher);
-    view.SoundManager = SoundManager;    
+    view.ResourceManager = ResourceManager;    
 })(view || (view = {}));
 //@ sourceMappingURL=ResourceManager.js.map

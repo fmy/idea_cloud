@@ -14,6 +14,7 @@ var control;
             this.canvasID = canvasID;
             this.stageID = stageID;
             StageController.instance = this;
+            createjs.Ticker.setFPS(30);
             this.model = new model.StageModel(this.stageID);
             this.view = new view.StageView(this.model, this.canvasID);
             this.view.addEventListener("draged", function (e) {

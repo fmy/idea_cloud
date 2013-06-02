@@ -101,19 +101,19 @@ var model;
                 "words": [
                     {
                         "id": 1,
-                        "name": "ごはん"
+                        "name": "イスラム"
                     }, 
                     {
                         "id": 2,
-                        "name": "たらこ"
+                        "name": "断食"
                     }, 
                     {
                         "id": 3,
-                        "name": "パスタ"
+                        "name": "恐竜"
                     }, 
                     {
                         "id": 4,
-                        "name": "みそ汁"
+                        "name": "肉食"
                     }
                 ],
                 "connections": [
@@ -125,12 +125,12 @@ var model;
                     {
                         "first_id": 1,
                         "second_id": 3,
-                        "status": -1
+                        "status": 0
                     }, 
                     {
                         "first_id": 1,
                         "second_id": 4,
-                        "status": 1
+                        "status": -1
                     }, 
                     {
                         "first_id": 2,
@@ -140,42 +140,42 @@ var model;
                     {
                         "first_id": 2,
                         "second_id": 3,
-                        "status": 1
+                        "status": -1
                     }, 
                     {
                         "first_id": 2,
                         "second_id": 4,
-                        "status": 0
-                    }, 
-                    {
-                        "first_id": 3,
-                        "second_id": 1,
                         "status": -1
                     }, 
                     {
                         "first_id": 3,
+                        "second_id": 1,
+                        "status": 0
+                    }, 
+                    {
+                        "first_id": 3,
                         "second_id": 2,
-                        "status": 1
+                        "status": -1
                     }, 
                     {
                         "first_id": 3,
                         "second_id": 4,
-                        "status": -1
-                    }, 
-                    {
-                        "first_id": 4,
-                        "second_id": 1,
                         "status": 1
                     }, 
                     {
                         "first_id": 4,
+                        "second_id": 1,
+                        "status": -1
+                    }, 
+                    {
+                        "first_id": 4,
                         "second_id": 2,
-                        "status": 0
+                        "status": -1
                     }, 
                     {
                         "first_id": 4,
                         "second_id": 3,
-                        "status": -1
+                        "status": 1
                     }
                 ]
             };
