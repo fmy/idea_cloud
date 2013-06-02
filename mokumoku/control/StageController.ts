@@ -16,7 +16,20 @@ module control {
             StageController.instance = this;
             this.model = new model.StageModel(this.stageID);
             this.view = new view.StageView(this.model, this.canvasID);
+            this.view.addEventListener("draged", (e: any): void => {
+                this.wordConnect(e.dragObject, e.dragTarget);
+            });
             this.preLoad();
+        }
+
+        wordConnect(wordA:model.WordData, wordB:model.WordData): void {
+            if (this.model.isConnect(wordA, wordB)) {
+                this.view.connectWord(wordA, wordB);
+            } else if (this.model.isDisConnect(wordA, wordB)) {
+                this.view.disConnectWord(wordA, wordB);
+            } else {
+                this.view.noConnectWord(wordA);
+            }
         }
 
         private preLoad(): void {
@@ -34,13 +47,6 @@ module control {
         private init(): void {
             
         }
-
-          wordConnect(wordA:model.WordData, wordB:model.WordData): void{
-              if(this.model.isConnect(wordA, wordB)) {
-
-              }
-
-           }
 
     }
 }

@@ -1,4 +1,4 @@
-var events;
+﻿var events;
 (function (events) {
     var Event = (function () {
         function Event(type, value) {
@@ -31,13 +31,45 @@ var __extends = this.__extends || function (d, b) {
 };
 var view;
 (function (view) {
+    var IntaractionConainer = (function (_super) {
+        __extends(IntaractionConainer, _super);
+        function IntaractionConainer() {
+            _super.apply(this, arguments);
+
+            this.width = 0;
+            this.height = 0;
+        }
+        IntaractionConainer.prototype.startDrag = function (e) {
+            e.addEventListener("mousemove", this.move);
+            e.addEventListener("mouseup", this.stopDrag);
+        };
+        IntaractionConainer.prototype.move = function (e) {
+            var instance = e.target;
+            instance.x = e.stageX - instance.width / 2;
+            instance.y = e.stageY - instance.height / 2;
+            instance.update();
+        };
+        IntaractionConainer.prototype.stopDrag = function (e) {
+            e.removeEventListener("mouseup", this.stopDrag);
+            e.removeEventListener("mousemove", this.move);
+            (e.target).dragEnd(e.target);
+        };
+        IntaractionConainer.prototype.update = function () {
+        };
+        IntaractionConainer.prototype.dragEnd = function (targert) {
+        };
+        return IntaractionConainer;
+    })(createjs.Container);
+    view.IntaractionConainer = IntaractionConainer;    
+})(view || (view = {}));
+var view;
+(function (view) {
     var WordView = (function (_super) {
         __extends(WordView, _super);
         function WordView(word) {
             var _this = this;
                 _super.call(this);
             this.size = 50;
-            this.dragPoint = null;
             this.shape = new createjs.Shape();
             this.text = new createjs.Text();
             this.addChild(this.shape);
@@ -45,25 +77,16 @@ var view;
             this.dataID = word.id;
             this.toDraw();
             this.name = word.id.toString();
+            this.width = this.size * 2;
+            this.height = this.size * 2;
             this.addEventListener("mousedown", function (e) {
+                _this.dragPosition = new createjs.Point(_this.x, _this.y);
                 _this.startDrag(e);
             });
-            this.addEventListener("mouseup", this.stopDrag);
         }
-        WordView.prototype.startDrag = function (e) {
-            e.addEventListener("mousemove", this.drag);
-        };
-        WordView.prototype.stopDrag = function (eventObject) {
-            this.removeEventListener("mousemove", this.drag);
-            this.removeEventListener("mouseup", this.stopDrag);
-        };
-        WordView.prototype.drag = function (eventObject) {
-            var instance = eventObject.target;
-            instance.x = eventObject.stageX;
-            instance.y = eventObject.stageY;
-            instance.update();
-        };
-        WordView.prototype.update = function () {
+        WordView.prototype.resetDragPosition = function () {
+            this.x = this.dragPosition.x;
+            this.y = this.dragPosition.y;
         };
         WordView.prototype.getData = function () {
             return control.StageController.getInstance().model.getWord(this.dataID);
@@ -81,8 +104,79 @@ var view;
         WordView.prototype.press = function (e) {
         };
         return WordView;
-    })(createjs.Container);
+    })(view.IntaractionConainer);
     view.WordView = WordView;    
+})(view || (view = {}));
+var view;
+(function (view) {
+    var SoundManager = (function (_super) {
+        __extends(SoundManager, _super);
+        function SoundManager() {
+            _super.apply(this, arguments);
+
+        }
+        SoundManager.getInstance = function getInstance() {
+            if(SoundManager.instance == null) {
+                SoundManager.instance = new SoundManager();
+            }
+            return SoundManager.instance;
+        };
+        SoundManager.prototype.load = function () {
+            var _this = this;
+            var queue = new createjs.LoadQueue(false);
+            var manifest = [
+                {
+                    id: "no01",
+                    src: "se/nocon1.mp3"
+                }, 
+                {
+                    id: "no02",
+                    src: "se/nocon2.mp3"
+                }, 
+                {
+                    id: "no03",
+                    src: "se/nocon3.mp3"
+                }, 
+                {
+                    id: "success01",
+                    src: "se/con1.mp3"
+                }, 
+                {
+                    id: "success02",
+                    src: "se/con2.mp3"
+                }, 
+                {
+                    id: "success03",
+                    src: "se/con3.mp3"
+                }, 
+                {
+                    id: "fault01",
+                    src: "se/bara1.mp3"
+                }, 
+                {
+                    id: "fault02",
+                    src: "se/bara2.mp3"
+                }, 
+                {
+                    id: "fault03",
+                    src: "se/bara3.mp3"
+                }
+            ];
+            queue.installPlugin(createjs.Sound);
+            queue.loadManifest(manifest, true);
+            queue.addEventListener("complete", function (e) {
+                _this.dispatchEvent(new events.Event(events.Event.COMPLETE), _this);
+            });
+        };
+        SoundManager.prototype.getSE = function (id) {
+            return createjs.Sound.createInstance(id);
+        };
+        SoundManager.prototype.playSE = function (id) {
+            createjs.Sound.play(id);
+        };
+        return SoundManager;
+    })(createjs.EventDispatcher);
+    view.SoundManager = SoundManager;    
 })(view || (view = {}));
 var view;
 (function (view) {
@@ -99,19 +193,29 @@ var view;
             var canvas = document.getElementById(this.stageID);
             this.stage = new createjs.Stage(canvas);
             this.model.addEventListener(events.Event.COMPLETE, function (e) {
-                _this.update();
+                _this.firstCreate();
             });
             this.model.addEventListener(events.Event.CHANGE_PROPERTY, function (e) {
                 _this.update();
             });
+            this.wordViewList = [];
+            this.sound().addEventListener("complete", function () {
+                _this.dispatchEvent(new events.Event(events.Event.COMPLETE), _this);
+            });
+            this.sound().load();
+        };
+        StageView.prototype.sound = function () {
+            return view.SoundManager.getInstance();
         };
         StageView.prototype.loadResource = function () {
             this.loadedResource();
         };
         StageView.prototype.update = function () {
+            this.stage.update();
+        };
+        StageView.prototype.firstCreate = function () {
             var _this = this;
             var wordList = this.model.getWordList();
-            console.log(wordList.length);
             for(var i = 0; i < wordList.length; i++) {
                 var word = wordList[i];
                 var xLength = Math.floor(this.stage.canvas.width / 120);
@@ -125,14 +229,53 @@ var view;
                 wordView.y = y * 120;
                 console.log(word.name + " : " + wordView.x + " : " + wordView.y + " :: " + xLength);
                 this.stage.addChild(wordView);
+                this.wordViewList.push(wordView);
+                wordView.dragEnd = function (target) {
+                    _this.woedDraged(target);
+                };
                 wordView.update = function () {
-                    _this.stage.update();
+                    _this.update();
                 };
             }
-            this.stage.update();
+            this.update();
         };
         StageView.prototype.loadedResource = function () {
-            this.dispatchEvent(new events.Event(events.Event.COMPLETE), this);
+        };
+        StageView.prototype.woedDraged = function (target) {
+            var result;
+            for(var i = 0; i < this.wordViewList.length; i++) {
+                var wordView = this.wordViewList[i];
+                if(target == wordView) {
+                    continue;
+                }
+                var position = wordView.globalToLocal(this.stage.mouseX, this.stage.mouseY);
+                if(wordView.hitTest(position.x, position.y)) {
+                    result = wordView.getData();
+                    break;
+                }
+                console.log(result);
+            }
+            if(result) {
+                this.dispatchEvent({
+                    type: "draged",
+                    dragObject: target.getData(),
+                    dragTarget: result
+                }, this);
+            }
+        };
+        StageView.prototype.rand = function () {
+            var rand = (Math.round(Math.random() * 3));
+            return rand;
+        };
+        StageView.prototype.connectWord = function (wordA, wordB) {
+            this.sound().playSE("success0" + this.rand());
+        };
+        StageView.prototype.disConnectWord = function (wordA, wordB) {
+            this.sound().playSE("fault0" + this.rand());
+        };
+        StageView.prototype.noConnectWord = function (wordA) {
+            this.sound().playSE("no0" + this.rand());
+            (this.stage.getChildByName(wordA.id.toString())).resetDragPosition();
         };
         return StageView;
     })(createjs.EventDispatcher);
@@ -291,16 +434,29 @@ var control;
         __extends(StageController, _super);
         function StageController(canvasID, stageID) {
             if (typeof stageID === "undefined") { stageID = 1; }
+            var _this = this;
                 _super.call(this);
             this.canvasID = canvasID;
             this.stageID = stageID;
             StageController.instance = this;
             this.model = new model.StageModel(this.stageID);
             this.view = new view.StageView(this.model, this.canvasID);
+            this.view.addEventListener("draged", function (e) {
+                _this.wordConnect(e.dragObject, e.dragTarget);
+            });
             this.preLoad();
         }
         StageController.getInstance = function getInstance() {
             return StageController.instance;
+        };
+        StageController.prototype.wordConnect = function (wordA, wordB) {
+            if(this.model.isConnect(wordA, wordB)) {
+                this.view.connectWord(wordA, wordB);
+            } else if(this.model.isDisConnect(wordA, wordB)) {
+                this.view.disConnectWord(wordA, wordB);
+            } else {
+                this.view.noConnectWord(wordA);
+            }
         };
         StageController.prototype.preLoad = function () {
             var _this = this;
@@ -314,10 +470,6 @@ var control;
         };
         StageController.prototype.init = function () {
         };
-        StageController.prototype.wordConnect = function (wordA, wordB) {
-            if(this.model.isConnect(wordA, wordB)) {
-            }
-        };
         return StageController;
     })(createjs.EventDispatcher);
     control.StageController = StageController;    
@@ -327,4 +479,10 @@ var App = (function () {
         this.controller = new control.StageController("myCanvas", stageID);
     }
     return App;
+})();
+var EditApp = (function () {
+    function EditApp() {
+        this.controller = new control.StageController("myCanvas", 1);
+    }
+    return EditApp;
 })();

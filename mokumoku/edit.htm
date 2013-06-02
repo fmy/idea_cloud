@@ -1,7 +1,7 @@
-﻿<!DOCTYPE html>
+﻿﻿<!DOCTYPEhtml>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="utf-8" />
+    <meta charset="utf-8">
     <title>TypeScript HTML App</title>
     <script type="text/javascript" src="js/jquery-1.10.1.min.js"></script>
     <script language="javascript" src="http://code.createjs.com/easeljs-0.6.1.min.js"></script>
@@ -19,22 +19,19 @@
             params[tmparr[0]] = tmparr[1];
         }
 
-        var app;
+        var edit;
         window.onload = function(){
-//          draw();
-            stageID = params.stage ? params.stage : 1;
-            app = new App(stageID);
+             edit = new EditApp();
         }
     </script>
-
 </head>
+
 <body style="padding:0px; margin:0px; width:100%; height:100%" >
-    <canvas id="myCanvas"></canvas>
-    <script type="text/javascript">
-        var canvas = document.getElementById("myCanvas");
-        var $window = $(window);
-        canvas.width = ($window.width());
-        canvas.height = ($window.height());
-    </script>
+
+<canvas id="myCanvas" width="100%" height="100%"></canvas>
+<form id="new_word_form" style="position:absolute;top:10px;left:10px;">
+    <input type="text" id="new_word" placeholder="りんご"/>
+    <input type="submit" id="submit" value="追加"/>
+</form>
 </body>
 </html>
