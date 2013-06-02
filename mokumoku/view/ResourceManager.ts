@@ -1,18 +1,26 @@
 /// <reference path="../events/Event.ts" />
 /// <reference path="../lib/CreateJS.d.ts" />
 module view {
-    export class SoundManager extends createjs.EventDispatcher {
-        static private instance: SoundManager;
-        static getInstance(): SoundManager {
-            if (SoundManager.instance == null) {
-                SoundManager.instance = new SoundManager();
+    export class ResourceManager extends createjs.EventDispatcher {
+        static private instance: ResourceManager;
+        static getInstance(): ResourceManager {
+            if (ResourceManager.instance == null) {
+                ResourceManager.instance = new ResourceManager();
             }
-            return SoundManager.instance;
+            return ResourceManager.instance;
+        }
+        private resource: any;
+
+        constructor() {
+            super();
+            this.resource = {};
         }
 
         load(): void {
             var queue: createjs.LoadQueue = new createjs.LoadQueue(false);
             var manifest = [
+                //{ id: "imgCon", src: "effect/con.png" },
+                //{ id: "imgBara", src: "effect/bara.png" },
                 { id: "no01", src: "se/nocon1.mp3" },
                 { id: "no02", src: "se/nocon2.mp3" },
                 { id: "no03", src: "se/nocon3.mp3" },
@@ -26,6 +34,14 @@ module view {
 
             queue.installPlugin(createjs.Sound);
             queue.loadManifest(manifest, true);
+            queue.addEventListener("fileload", (e: any) => {
+                var evt = e.item;
+                switch (evt.type) {
+                    case "image":
+                        this.resource[evt.id] = new createjs.Bitmap(evt.src);
+                        break;
+                }
+            });
             queue.addEventListener("complete", (e) => {
                 this.dispatchEvent(new events.Event(events.Event.COMPLETE), this);
             });
@@ -37,6 +53,10 @@ module view {
 
         playSE(id: string): void {
             createjs.Sound.play(id);
+        }
+
+        getBmp(id: string): createjs.Bitmap {
+            return this.resource[id];
         }
 
     }

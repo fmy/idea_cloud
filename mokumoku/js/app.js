@@ -1,4 +1,4 @@
-var events;
+﻿var events;
 (function (events) {
     var Event = (function () {
         function Event(type, value) {
@@ -109,19 +109,20 @@ var view;
 })(view || (view = {}));
 var view;
 (function (view) {
-    var SoundManager = (function (_super) {
-        __extends(SoundManager, _super);
-        function SoundManager() {
-            _super.apply(this, arguments);
-
+    var ResourceManager = (function (_super) {
+        __extends(ResourceManager, _super);
+        function ResourceManager() {
+                _super.call(this);
+            this.resource = {
+            };
         }
-        SoundManager.getInstance = function getInstance() {
-            if(SoundManager.instance == null) {
-                SoundManager.instance = new SoundManager();
+        ResourceManager.getInstance = function getInstance() {
+            if(ResourceManager.instance == null) {
+                ResourceManager.instance = new ResourceManager();
             }
-            return SoundManager.instance;
+            return ResourceManager.instance;
         };
-        SoundManager.prototype.load = function () {
+        ResourceManager.prototype.load = function () {
             var _this = this;
             var queue = new createjs.LoadQueue(false);
             var manifest = [
@@ -164,29 +165,56 @@ var view;
             ];
             queue.installPlugin(createjs.Sound);
             queue.loadManifest(manifest, true);
+            queue.addEventListener("fileload", function (e) {
+                var evt = e.item;
+                switch(evt.type) {
+                    case "image":
+                        _this.resource[evt.id] = new createjs.Bitmap(evt.src);
+                        break;
+                }
+            });
             queue.addEventListener("complete", function (e) {
                 _this.dispatchEvent(new events.Event(events.Event.COMPLETE), _this);
             });
         };
-        SoundManager.prototype.getSE = function (id) {
+        ResourceManager.prototype.getSE = function (id) {
             return createjs.Sound.createInstance(id);
         };
-        SoundManager.prototype.playSE = function (id) {
+        ResourceManager.prototype.playSE = function (id) {
             createjs.Sound.play(id);
         };
-        return SoundManager;
+        ResourceManager.prototype.getBmp = function (id) {
+            return this.resource[id];
+        };
+        return ResourceManager;
     })(createjs.EventDispatcher);
-    view.SoundManager = SoundManager;    
+    view.ResourceManager = ResourceManager;    
 })(view || (view = {}));
 var view;
 (function (view) {
     var StageView = (function (_super) {
         __extends(StageView, _super);
         function StageView(model, stageID) {
+            var _this = this;
                 _super.call(this);
             this.model = model;
             this.stageID = stageID;
             this.init();
+            this.effect = document.createElement("div");
+            this.effect.style.position = "absolute";
+            this.effect.style.width = "100%";
+            this.effect.style.height = "100%";
+            this.effect.style.left = "0px";
+            this.effect.style.top = "0px";
+            this.effectImg = document.createElement("img");
+            this.effect.appendChild(this.effectImg);
+            this.effectImg.style.width = "100%";
+            this.effectImg.style.height = "100%";
+            this.effect.style.display = "none";
+            document.body.appendChild(this.effect);
+            createjs.Ticker.addEventListener("tick", function () {
+                _this.stage.update();
+            });
         }
         StageView.prototype.init = function () {
             var _this = this;
@@ -195,23 +223,17 @@ var view;
             this.model.addEventListener(events.Event.COMPLETE, function (e) {
                 _this.firstCreate();
             });
-            this.model.addEventListener(events.Event.CHANGE_PROPERTY, function (e) {
-                _this.update();
-            });
             this.wordViewList = [];
-            this.sound().addEventListener("complete", function () {
+            this.resource().addEventListener("complete", function () {
                 _this.dispatchEvent(new events.Event(events.Event.COMPLETE), _this);
             });
-            this.sound().load();
+            this.resource().load();
         };
-        StageView.prototype.sound = function () {
-            return view.SoundManager.getInstance();
+        StageView.prototype.resource = function () {
+            return view.ResourceManager.getInstance();
         };
         StageView.prototype.loadResource = function () {
             this.loadedResource();
-        };
-        StageView.prototype.update = function () {
-            this.stage.update();
         };
         StageView.prototype.firstCreate = function () {
             var _this = this;
@@ -233,11 +255,7 @@ var view;
                 wordView.dragEnd = function (target) {
                     _this.woedDraged(target);
                 };
-                wordView.update = function () {
-                    _this.update();
-                };
             }
-            this.update();
         };
         StageView.prototype.loadedResource = function () {
         };
@@ -267,16 +285,33 @@ var view;
             var rand = (Math.round(Math.random() * 3));
             return rand;
         };
+        StageView.prototype.showEffect = function (id) {
+            var _this = this;
+            var resource = {
+                imgCon: "effect/con.png",
+                imgBara: "effect/bara.png"
+            };
+            this.effect.style.display = "block";
+            this.effectImg.src = resource[id];
+            setTimeout(function () {
+                _this.hideEffect();
+            }, 500);
+        };
+        StageView.prototype.hideEffect = function () {
+            this.effect.style.display = "none";
+        };
         StageView.prototype.connectWord = function (wordA, wordB) {
-            this.sound().playSE("success0" + this.rand());
+            this.showEffect("imgCon");
+            this.resource().playSE("success0" + this.rand());
             this.model.connect(wordA.id, wordB.id);
         };
         StageView.prototype.disConnectWord = function (wordA, wordB) {
-            this.sound().playSE("fault0" + this.rand());
+            this.showEffect("imgBara");
+            this.resource().playSE("fault0" + this.rand());
             this.model.disConnect(wordA.id, wordB.id);
         };
         StageView.prototype.noConnectWord = function (wordA) {
-            this.sound().playSE("no0" + this.rand());
+            this.resource().playSE("no0" + this.rand());
             (this.stage.getChildByName(wordA.id.toString())).resetDragPosition();
         };
         return StageView;
@@ -486,6 +521,7 @@ var control;
             this.canvasID = canvasID;
             this.stageID = stageID;
             StageController.instance = this;
+            createjs.Ticker.setFPS(30);
             this.model = new model.StageModel(this.stageID);
             this.view = new view.StageView(this.model, this.canvasID);
             this.view.addEventListener("draged", function (e) {
