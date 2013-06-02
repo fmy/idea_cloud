@@ -339,8 +339,8 @@ var model;
         StageModel.prototype.getScore = function () {
             var score = 0;
             for(var i in this.connecting) {
-                var size = this.connecting[i].size();
-                score += 3 ^ (size - 2) * 100;
+                var size = this.connecting[i].length;
+                score += Math.pow(3, size - 2) * 100;
             }
             return score;
         };
@@ -366,7 +366,7 @@ var model;
                     id2
                 ]);
             }
-            console.log(this.connecting);
+            console.log(this.getScore());
         };
         StageModel.prototype.disConnect = function (id1, id2) {
             for(var i in this.connecting) {
@@ -378,7 +378,6 @@ var model;
                     }
                 }
             }
-            console.log(this.connecting);
         };
         StageModel.prototype.isConnect = function (wordA, wordB) {
             var result = false;
