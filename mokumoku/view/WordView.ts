@@ -2,14 +2,15 @@
 /// <reference path="../model/word.ts" />
 /// <reference path="../control/StageController.ts" />
 /// <reference path="../lib/CreateJS.d.ts" />
+/// <reference path="IntaractionConainer.ts" />
 
 module view {
-    export class WordView extends createjs.Container {
+    export class WordView extends IntaractionConainer {
         dataID: number;
         text: createjs.Text;
         shape: createjs.Shape;
         private size: number = 50;
-       
+        private dragPosition: createjs.Point;
         constructor(word: model.WordData) {
             super();
             this.shape = new createjs.Shape();
@@ -19,32 +20,19 @@ module view {
             this.dataID = word.id;
             this.toDraw();
             this.name = word.id.toString();
-            this.addEventListener("mousedown", (e: createjs.MouseEvent) => { this.startDrag(e) });
-            this.addEventListener("mouseup", this.stopDrag);
+            this.width = this.size * 2;
+            this.height = this.size * 2;
+            this.addEventListener("mousedown", (e: createjs.MouseEvent) => {
+                this.dragPosition = new createjs.Point(this.x, this.y);
+                this.startDrag(e);
+            });
+        }
+        resetDragPosition(): void {
+            this.x = this.dragPosition.x;
+            this.y = this.dragPosition.y;
         }
 
-        dragPoint: createjs.Point = null;
-        startDrag(e: createjs.MouseEvent): void {
-            e.addEventListener("mousemove", this.drag);
-        }
-
-        stopDrag(eventObject:createjs.MouseEvent) {
-            this.removeEventListener("mousemove", this.drag);
-            this.removeEventListener("mouseup", this.stopDrag);
-        }
-
-        drag(eventObject) {
-            var instance = eventObject.target;
-            instance.x = eventObject.stageX;
-            instance.y = eventObject.stageY;
-            instance.update();
-        }
-
-        update(): void {
-
-        }
-
-        private getData():model.WordData {
+        getData():model.WordData {
             return control.StageController.getInstance().model.getWord(this.dataID);
         }
 

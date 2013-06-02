@@ -3,22 +3,38 @@ var __extends = this.__extends || function (d, b) {
     __.prototype = b.prototype;
     d.prototype = new __();
 };
+/// <reference path="../lib/CreateJS.d.ts" />
+/// <reference path="../view/StageView.ts" />
+/// <reference path="../model/StageModel.ts" />
 var control;
 (function (control) {
     var StageController = (function (_super) {
         __extends(StageController, _super);
         function StageController(canvasID, stageID) {
             if (typeof stageID === "undefined") { stageID = 1; }
+            var _this = this;
                 _super.call(this);
             this.canvasID = canvasID;
             this.stageID = stageID;
             StageController.instance = this;
             this.model = new model.StageModel(this.stageID);
             this.view = new view.StageView(this.model, this.canvasID);
+            this.view.addEventListener("draged", function (e) {
+                _this.wordConnect(e.dragObject, e.dragTarget);
+            });
             this.preLoad();
         }
         StageController.getInstance = function getInstance() {
             return StageController.instance;
+        };
+        StageController.prototype.wordConnect = function (wordA, wordB) {
+            if(this.model.isConnect(wordA, wordB)) {
+                this.view.connectWord(wordA, wordB);
+            } else if(this.model.isDisConnect(wordA, wordB)) {
+                this.view.disConnectWord(wordA, wordB);
+            } else {
+                this.view.noConnectWord(wordA);
+            }
         };
         StageController.prototype.preLoad = function () {
             var _this = this;
@@ -31,10 +47,6 @@ var control;
             this.model.loadResource();
         };
         StageController.prototype.init = function () {
-        };
-        StageController.prototype.wordConnect = function (wordA, wordB) {
-            if(this.model.isConnect(wordA, wordB)) {
-            }
         };
         return StageController;
     })(createjs.EventDispatcher);

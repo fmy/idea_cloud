@@ -1,10 +1,13 @@
 /// <reference path="../events/Event.ts" />
 /// <reference path="WordView.ts" />
+/// <reference path="SoundManager.ts" />
 /// <reference path="../lib/CreateJS.d.ts" />
+
 module view {
     
     export class StageView extends createjs.EventDispatcher {
         private stage: createjs.Stage;
+        private wordViewList: WordView[];
         constructor(public model: model.StageModel, public stageID:string) {
             super();
             this.init();
@@ -14,20 +17,35 @@ module view {
             var canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById(this.stageID);
             this.stage = new createjs.Stage(canvas);
             this.model.addEventListener(events.Event.COMPLETE, (e) => {
-                this.update();
+                this.firstCreate();
             });
             this.model.addEventListener(events.Event.CHANGE_PROPERTY, (e) => {
                 this.update();
             });
+
+            this.wordViewList = [];
+
+            this.sound().addEventListener("complete", () => {
+                this.dispatchEvent(new events.Event(events.Event.COMPLETE), this);
+            });
+            this.sound().load();
+
+        }
+
+        sound(): SoundManager {
+            return SoundManager.getInstance();
         }
 
         loadResource():void{
             this.loadedResource();
         }
 
-        update(): void {    
+        private update(): void {
+            this.stage.update();
+        }
+
+        firstCreate(): void {    
             var wordList: model.WordData[] = this.model.getWordList();
-            console.log(wordList.length);
             for (var i: number = 0; i < wordList.length; i++) {
                 var word: model.WordData = wordList[i];
                 var xLength: number = Math.floor(this.stage.canvas.width / 120);
@@ -41,15 +59,55 @@ module view {
                 wordView.y = y * 120;
                 console.log(word.name + " : " + wordView.x + " : " + wordView.y + " :: " + xLength);
                 this.stage.addChild(wordView);
-                wordView.update = () => {
-                    this.stage.update();
+                this.wordViewList.push(wordView);
+                wordView.dragEnd = (target:WordView) => {
+                    this.woedDraged(target);
                 }
+                wordView.update = () => { this.update() };
             }
-            this.stage.update();
+            this.update();
         }
 
-        private loadedResource():void{
-            this.dispatchEvent(new events.Event(events.Event.COMPLETE), this);
+        private loadedResource(): void {
+            
+            
+        }
+
+        private woedDraged(target: WordView): void {
+            var result: model.WordData;
+            for (var i: number = 0; i < this.wordViewList.length; i++) {
+                var wordView: WordView = this.wordViewList[i];
+                if (target == wordView) {
+                    continue;
+                }
+                var position: createjs.Point = wordView.globalToLocal(this.stage.mouseX, this.stage.mouseY);
+                if (wordView.hitTest(position.x, position.y)) {
+                    result = wordView.getData();
+                    break;
+                }
+                console.log(result);
+            }
+            if (result) {
+                this.dispatchEvent({ type: "draged",dragObject:target.getData(), dragTarget: result }, this);
+            }
+        }
+
+        private rand(): number {
+            var rand: number = (Math.round(Math.random() * 3));
+            return rand;
+        }
+
+        connectWord(wordA: model.WordData, wordB: model.WordData): void {
+            this.sound().playSE("success0" + this.rand());
+        }
+
+        disConnectWord(wordA: model.WordData, wordB: model.WordData): void {
+            this.sound().playSE("fault0" + this.rand());
+        }
+
+        noConnectWord(wordA: model.WordData): void {
+            this.sound().playSE("no0" + this.rand());
+            (<view.WordView>this.stage.getChildByName(wordA.id.toString())).resetDragPosition();
         }
 
     }

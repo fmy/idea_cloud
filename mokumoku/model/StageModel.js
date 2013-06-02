@@ -1,4 +1,4 @@
-var __extends = this.__extends || function (d, b) {
+﻿var __extends = this.__extends || function (d, b) {
     function __() { this.constructor = d; }
     __.prototype = b.prototype;
     d.prototype = new __();
@@ -51,6 +51,16 @@ var model;
         };
         StageModel.prototype.loadResource = function () {
             var _this = this;
+            //            $.ajax({
+            //                url: "http://0.0.0.0:3000/stages/" + this.stageID,
+            //                type: "get",
+            //                dataType: "json"
+            //            }).done((data) => {
+            //                JSON.parse(data).words.each((word) => {
+            //                    var w = new WordData(word.id, word.name);
+            //                    this.wordList.push(w);
+            //                });
+            //            });
             var json = {
                 "id": 1,
                 "name": "level1",
