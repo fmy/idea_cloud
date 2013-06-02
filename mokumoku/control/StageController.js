@@ -3,21 +3,31 @@ var __extends = this.__extends || function (d, b) {
     __.prototype = b.prototype;
     d.prototype = new __();
 };
+/// <reference path="../lib/CreateJS.d.ts" />
+/// <reference path="../view/StageView.ts" />
+/// <reference path="../model/StageModel.ts" />
 var control;
 (function (control) {
     var StageController = (function (_super) {
         __extends(StageController, _super);
-        function StageController() {
+        function StageController(canvasID, stageID) {
+            if (typeof stageID === "undefined") { stageID = 1; }
                 _super.call(this);
+            this.canvasID = canvasID;
+            this.stageID = stageID;
+            StageController.instance = this;
+            this.model = new model.StageModel(this.stageID);
+            this.view = new view.StageView(this.model, this.canvasID);
             this.preLoad();
         }
+        StageController.getInstance = function getInstance() {
+            return StageController.instance;
+        };
         StageController.prototype.preLoad = function () {
             var _this = this;
-            this.model = new model.StageModel();
             this.model.addEventListener(events.Event.COMPLETE, function (e) {
                 _this.view.loadResource();
             });
-            this.view = new view.StageView(this.model);
             this.view.addEventListener(events.Event.COMPLETE, function (e) {
                 _this.init();
             });

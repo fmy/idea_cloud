@@ -34,51 +34,17 @@ var view;
     var WordView = (function (_super) {
         __extends(WordView, _super);
         function WordView(word) {
-            var _this = this;
                 _super.call(this);
-            this.size = 50;
-            this.dragPoint = null;
             this.shape = new createjs.Shape();
             this.text = new createjs.Text();
-            this.addChild(this.shape);
-            this.addChild(this.text);
-            this.dataID = word.id;
-            this.toDraw();
-            this.name = word.id.toString();
-            this.addEventListener("mousedown", function (e) {
-                _this.startDrag(e);
-            });
-            this.addEventListener("mouseup", this.stopDrag);
         }
-        WordView.prototype.startDrag = function (e) {
-            e.addEventListener("mousemove", this.drag);
-        };
-        WordView.prototype.stopDrag = function (eventObject) {
-            this.removeEventListener("mousemove", this.drag);
-            this.removeEventListener("mouseup", this.stopDrag);
-        };
-        WordView.prototype.drag = function (eventObject) {
-            var instance = eventObject.target;
-            instance.x = eventObject.stageX;
-            instance.y = eventObject.stageY;
-            instance.update();
-        };
-        WordView.prototype.update = function () {
-        };
         WordView.prototype.getData = function () {
             return control.StageController.getInstance().model.getWord(this.dataID);
         };
-        WordView.prototype.getSize = function () {
-            return this.size;
-        };
-        WordView.prototype.toDraw = function () {
+        WordView.prototype.draw = function () {
             this.shape.graphics.beginFill("#ff0000");
-            this.shape.graphics.drawCircle(this.size, this.size, this.size);
+            this.shape.graphics.drawCircle(0, 0, 100);
             this.text.text = this.getData().name;
-            this.text.x = this.size - this.text.getMeasuredWidth() / 2;
-            this.text.y = this.size - this.text.getMeasuredHeight() / 2;
-        };
-        WordView.prototype.press = function (e) {
         };
         return WordView;
     })(createjs.Container);
@@ -97,6 +63,8 @@ var view;
         StageView.prototype.init = function () {
             var _this = this;
             var canvas = document.getElementById(this.stageID);
+            canvas.style.width = document.body.clientWidth + "px";
+            canvas.style.height = document.body.clientHeight + "px";
             this.stage = new createjs.Stage(canvas);
             this.model.addEventListener(events.Event.COMPLETE, function (e) {
                 _this.update();
@@ -104,30 +72,22 @@ var view;
             this.model.addEventListener(events.Event.CHANGE_PROPERTY, function (e) {
                 _this.update();
             });
+            this.wordViewList = [];
+            this.wordViewHash = {
+            };
         };
         StageView.prototype.loadResource = function () {
             this.loadedResource();
         };
         StageView.prototype.update = function () {
-            var _this = this;
             var wordList = this.model.getWordList();
-            console.log(wordList.length);
             for(var i = 0; i < wordList.length; i++) {
                 var word = wordList[i];
-                var xLength = Math.floor(this.stage.canvas.width / 120);
-                var x = i % xLength;
-                var y = Math.floor(i / xLength);
-                var wordView = this.stage.getChildByName(word.id.toString());
-                if(wordView == null) {
-                    wordView = new view.WordView(word);
+                if(this.wordViewHash[word.id] == null) {
+                    this.wordViewHash[word.id] = word;
+                    wordList.push(word);
+                    this.stage.addChild(new view.WordView(word));
                 }
-                wordView.x = x * 120;
-                wordView.y = y * 120;
-                console.log(word.name + " : " + wordView.x + " : " + wordView.y + " :: " + xLength);
-                this.stage.addChild(wordView);
-                wordView.update = function () {
-                    _this.stage.update();
-                };
             }
             this.stage.update();
         };
@@ -146,14 +106,12 @@ var model;
                 _super.call(this);
             this.stage_id = stage_id;
             this.wordList = [];
-            this.wordHash = {
-            };
         }
         StageModel.prototype.getWordList = function () {
             return this.wordList;
         };
         StageModel.prototype.getWord = function (wordID) {
-            return this.wordHash[wordID];
+            return null;
         };
         StageModel.prototype.isConnect = function (wordA, wordB) {
             return true;
@@ -166,11 +124,10 @@ var model;
         };
         StageModel.prototype.loadResource = function () {
             var _this = this;
-            var data = '{"id": 1,"name": "level1","words": [{"id": 1,"name": "ごはん"},{"id": 2,"name": "たらこ"},{"id": 3,"name": "パスタ"},{"id": 4,"name": "みそ汁"}]}';
-            $(JSON.parse(data).words).each(function (index, word) {
+            var data = '{"id": 1,"name": "level1","words": [{"id": 1,"name": "ã”ã¯ã‚“"},{"id": 2,"name": "ãŸã‚‰ã“"},{"id": 3,"name": "ãƒ‘ã‚¹ã‚¿"},{"id": 4,"name": "ã¿ãæ±"}]}';
+            JSON.parse(data).words.each(function (word) {
                 var w = new model.WordData(word.id, word.name);
                 _this.wordList.push(w);
-                _this.wordHash[w.id] = w;
             });
             this.loadedResource();
         };
