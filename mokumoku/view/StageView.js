@@ -94,11 +94,11 @@ var view;
         };
         StageView.prototype.connectWord = function (wordA, wordB) {
             this.sound().playSE("success0" + this.rand());
-            this.score = this.model.changeScore(100);
+            this.model.connect(wordA.id, wordB.id);
         };
         StageView.prototype.disConnectWord = function (wordA, wordB) {
             this.sound().playSE("fault0" + this.rand());
-            this.score = this.model.changeScore(-100);
+            this.model.disConnect(wordA.id, wordB.id);
         };
         StageView.prototype.noConnectWord = function (wordA) {
             this.sound().playSE("no0" + this.rand());

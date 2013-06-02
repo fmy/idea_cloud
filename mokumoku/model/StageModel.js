@@ -13,7 +13,7 @@ var model;
             this.wordList = [];
             this.wordHash = {
             };
-            this.score = 0;
+            this.connecting = [];
         }
         StageModel.prototype.getWordList = function () {
             return this.wordList;
@@ -22,10 +22,48 @@ var model;
             return this.wordHash[wordID];
         };
         StageModel.prototype.getScore = function () {
-            return this.score;
+            var score = 0;
+            for(var i in this.connecting) {
+                var size = this.connecting[i].size();
+                score += 3 ^ (size - 2) * 100;
+            }
+            return score;
         };
-        StageModel.prototype.changeScore = function (diff) {
-            return this.score = this.score + diff;
+        StageModel.prototype.connect = function (id1, id2) {
+            var exist = false;
+            for(var i in this.connecting) {
+                var set = this.connecting[i];
+                for(var j in set) {
+                    if(id1 == set[j]) {
+                        exist = true;
+                        this.connecting[i].push(id2);
+                        break;
+                    } else if(id2 == set[j]) {
+                        exist = true;
+                        this.connecting[i].push(id1);
+                        break;
+                    }
+                }
+            }
+            if(!exist) {
+                this.connecting.push([
+                    id1, 
+                    id2
+                ]);
+            }
+            console.log(this.connecting);
+        };
+        StageModel.prototype.disConnect = function (id1, id2) {
+            for(var i in this.connecting) {
+                var set = this.connecting[i];
+                for(var j in set) {
+                    if(id1 == set[j] || id2 == set[j]) {
+                        delete this.connecting[i];
+                        break;
+                    }
+                }
+            }
+            console.log(this.connecting);
         };
         StageModel.prototype.isConnect = function (wordA, wordB) {
             var result = false;

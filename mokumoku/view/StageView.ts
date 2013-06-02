@@ -100,12 +100,12 @@ module view {
 
         connectWord(wordA: model.WordData, wordB: model.WordData): void {
             this.sound().playSE("success0" + this.rand());
-            this.score = this.model.changeScore(100);
+            this.model.connect(wordA.id, wordB.id);
         }
 
         disConnectWord(wordA: model.WordData, wordB: model.WordData): void {
             this.sound().playSE("fault0" + this.rand());
-            this.score = this.model.changeScore(-100);
+            this.model.disConnect(wordA.id, wordB.id);
         }
 
         noConnectWord(wordA: model.WordData): void {
