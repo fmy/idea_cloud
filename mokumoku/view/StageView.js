@@ -3,6 +3,13 @@ var __extends = this.__extends || function (d, b) {
     __.prototype = b.prototype;
     d.prototype = new __();
 };
+<<<<<<< Updated upstream
+=======
+/// <reference path="../events/Event.ts" />
+/// <reference path="WordView.ts" />
+/// <reference path="SoundManager.ts" />
+/// <reference path="../lib/CreateJS.d.ts" />
+>>>>>>> Stashed changes
 var view;
 (function (view) {
     var StageView = (function (_super) {
@@ -94,11 +101,17 @@ var view;
         };
         StageView.prototype.connectWord = function (wordA, wordB) {
             this.sound().playSE("success0" + this.rand());
+<<<<<<< Updated upstream
             this.model.connect(wordA.id, wordB.id);
         };
         StageView.prototype.disConnectWord = function (wordA, wordB) {
             this.sound().playSE("fault0" + this.rand());
             this.model.disConnect(wordA.id, wordB.id);
+=======
+        };
+        StageView.prototype.disConnectWord = function (wordA, wordB) {
+            this.sound().playSE("fault0" + this.rand());
+>>>>>>> Stashed changes
         };
         StageView.prototype.noConnectWord = function (wordA) {
             this.sound().playSE("no0" + this.rand());

@@ -14,6 +14,7 @@ module control {
         constructor(public canvasID:string, public stageID:number=1) {
             super();
             StageController.instance = this;
+            createjs.Ticker.setFPS(30);
             this.model = new model.StageModel(this.stageID);
             this.view = new view.StageView(this.model, this.canvasID);
             this.view.addEventListener("draged", (e: any): void => {

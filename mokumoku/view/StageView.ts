@@ -1,6 +1,6 @@
 /// <reference path="../events/Event.ts" />
 /// <reference path="WordView.ts" />
-/// <reference path="SoundManager.ts" />
+/// <reference path="ResourceManager.ts" />
 /// <reference path="../lib/CreateJS.d.ts" />
 
 module view {
@@ -9,9 +9,27 @@ module view {
         private stage: createjs.Stage;
         private wordViewList: WordView[];
         private score: number;
+        private effect: HTMLDivElement;
+        private effectImg: HTMLImageElement;
         constructor(public model: model.StageModel, public stageID:string) {
             super();
             this.init();
+            this.effect = <HTMLDivElement>document.createElement("div");
+            this.effect.style.position = "absolute";
+            this.effect.style.width = "100%";
+            this.effect.style.height = "100%";
+            this.effect.style.left = "0px"
+            this.effect.style.top = "0px";
+            this.effectImg = <HTMLImageElement> document.createElement("img");
+            this.effect.appendChild(this.effectImg);
+            this.effectImg.style.width = "100%";
+            this.effectImg.style.height = "100%";
+            this.effect.style.display = "none";
+
+            document.body.appendChild(this.effect);
+            createjs.Ticker.addEventListener("tick",  ()=> {
+                this.stage.update(); // 30fpsでステージの描画が更新されるようになる
+            });
         }
 
         private init(): void {
@@ -20,30 +38,24 @@ module view {
             this.model.addEventListener(events.Event.COMPLETE, (e) => {
                 this.firstCreate();
             });
-            this.model.addEventListener(events.Event.CHANGE_PROPERTY, (e) => {
-                this.update();
-            });
 
             this.wordViewList = [];
 
-            this.sound().addEventListener("complete", () => {
+            this.resource().addEventListener("complete", () => {
                 this.dispatchEvent(new events.Event(events.Event.COMPLETE), this);
             });
-            this.sound().load();
+            this.resource().load();
 
         }
 
-        sound(): SoundManager {
-            return SoundManager.getInstance();
+        resource(): ResourceManager {
+            return ResourceManager.getInstance();
         }
 
         loadResource():void{
             this.loadedResource();
         }
 
-        private update(): void {
-            this.stage.update();
-        }
 
         firstCreate(): void {    
             var wordList: model.WordData[] = this.model.getWordList();
@@ -64,9 +76,7 @@ module view {
                 wordView.dragEnd = (target:WordView) => {
                     this.woedDraged(target);
                 }
-                wordView.update = () => { this.update() };
             }
-            this.update();
         }
 
         private loadedResource(): void {
@@ -98,18 +108,35 @@ module view {
             return rand;
         }
 
+        private showEffect(id: string): void {
+            var resource: any = {
+                imgCon: "effect/con.png",
+                imgBara: "effect/bara.png"
+            };
+            this.effect.style.display = "block";
+
+            this.effectImg.src = resource[id];
+            setTimeout(() => { this.hideEffect() }, 500);
+        }
+
+        private hideEffect(): void {
+            this.effect.style.display = "none";
+        }
+
         connectWord(wordA: model.WordData, wordB: model.WordData): void {
-            this.sound().playSE("success0" + this.rand());
+            this.showEffect("imgCon");
+            this.resource().playSE("success0" + this.rand());
             this.model.connect(wordA.id, wordB.id);
         }
 
         disConnectWord(wordA: model.WordData, wordB: model.WordData): void {
-            this.sound().playSE("fault0" + this.rand());
+            this.showEffect("imgBara");
+            this.resource().playSE("fault0" + this.rand());
             this.model.disConnect(wordA.id, wordB.id);
         }
 
         noConnectWord(wordA: model.WordData): void {
-            this.sound().playSE("no0" + this.rand());
+            this.resource().playSE("no0" + this.rand());
             (<view.WordView>this.stage.getChildByName(wordA.id.toString())).resetDragPosition();
         }
 
