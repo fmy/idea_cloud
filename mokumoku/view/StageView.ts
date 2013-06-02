@@ -8,12 +8,20 @@ module view {
     export class StageView extends createjs.EventDispatcher {
         private stage: createjs.Stage;
         private wordViewList: WordView[];
-        private score: number;
         private effect: HTMLDivElement;
         private effectImg: HTMLImageElement;
+        private score: HTMLDivElement;
         constructor(public model: model.StageModel, public stageID:string) {
             super();
             this.init();
+           
+            createjs.Ticker.addEventListener("tick", () => {
+                this.score.innerText = this.model.getScore().toString();
+                this.stage.update(); // 30fpsでステージの描画が更新されるようになる
+            });
+        }
+
+        private craeteEffect(): void {
             this.effect = <HTMLDivElement>document.createElement("div");
             this.effect.style.position = "absolute";
             this.effect.style.width = "100%";
@@ -27,9 +35,14 @@ module view {
             this.effect.style.display = "none";
 
             document.body.appendChild(this.effect);
-            createjs.Ticker.addEventListener("tick",  ()=> {
-                this.stage.update(); // 30fpsでステージの描画が更新されるようになる
-            });
+        }
+
+        private createScore(): void {
+            this.score = <HTMLDivElement> document.createElement("div");
+            this.score.style.position = "absolute";
+            this.score.style.right = "5px";
+            this.score.style.top = "5px";
+            document.body.appendChild(this.score);
         }
 
         private init(): void {
@@ -40,12 +53,15 @@ module view {
             });
 
             this.wordViewList = [];
+            this.craeteEffect();
+            this.createScore();
+
 
             this.resource().addEventListener("complete", () => {
                 this.dispatchEvent(new events.Event(events.Event.COMPLETE), this);
             });
             this.resource().load();
-
+            
         }
 
         resource(): ResourceManager {

@@ -200,6 +200,12 @@ var view;
             this.model = model;
             this.stageID = stageID;
             this.init();
+            createjs.Ticker.addEventListener("tick", function () {
+                _this.score.innerText = _this.model.getScore().toString();
+                _this.stage.update();
+            });
+        }
+        StageView.prototype.craeteEffect = function () {
             this.effect = document.createElement("div");
             this.effect.style.position = "absolute";
             this.effect.style.width = "100%";
@@ -212,10 +218,14 @@ var view;
             this.effectImg.style.height = "100%";
             this.effect.style.display = "none";
             document.body.appendChild(this.effect);
-            createjs.Ticker.addEventListener("tick", function () {
-                _this.stage.update();
-            });
-        }
+        };
+        StageView.prototype.createScore = function () {
+            this.score = document.createElement("div");
+            this.score.style.position = "absolute";
+            this.score.style.right = "5px";
+            this.score.style.top = "5px";
+            document.body.appendChild(this.score);
+        };
         StageView.prototype.init = function () {
             var _this = this;
             var canvas = document.getElementById(this.stageID);
@@ -224,6 +234,8 @@ var view;
                 _this.firstCreate();
             });
             this.wordViewList = [];
+            this.craeteEffect();
+            this.createScore();
             this.resource().addEventListener("complete", function () {
                 _this.dispatchEvent(new events.Event(events.Event.COMPLETE), _this);
             });
