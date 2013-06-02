@@ -441,6 +441,22 @@ var model;
                     {
                         "id": 4,
                         "name": "肉食"
+                    }, 
+                    {
+                        "id": 5,
+                        "name": "ごはん"
+                    }, 
+                    {
+                        "id": 6,
+                        "name": "たらこ"
+                    }, 
+                    {
+                        "id": 7,
+                        "name": "パスタ"
+                    }, 
+                    {
+                        "id": 8,
+                        "name": "みそ汁"
                     }
                 ],
                 "connections": [
@@ -503,6 +519,66 @@ var model;
                         "first_id": 4,
                         "second_id": 3,
                         "status": 1
+                    }, 
+                    {
+                        "first_id": 5,
+                        "second_id": 6,
+                        "status": 1
+                    }, 
+                    {
+                        "first_id": 5,
+                        "second_id": 7,
+                        "status": -1
+                    }, 
+                    {
+                        "first_id": 5,
+                        "second_id": 8,
+                        "status": 1
+                    }, 
+                    {
+                        "first_id": 6,
+                        "second_id": 5,
+                        "status": 1
+                    }, 
+                    {
+                        "first_id": 6,
+                        "second_id": 7,
+                        "status": 1
+                    }, 
+                    {
+                        "first_id": 6,
+                        "second_id": 8,
+                        "status": 0
+                    }, 
+                    {
+                        "first_id": 7,
+                        "second_id": 5,
+                        "status": -1
+                    }, 
+                    {
+                        "first_id": 7,
+                        "second_id": 6,
+                        "status": 1
+                    }, 
+                    {
+                        "first_id": 7,
+                        "second_id": 8,
+                        "status": 0
+                    }, 
+                    {
+                        "first_id": 8,
+                        "second_id": 5,
+                        "status": 1
+                    }, 
+                    {
+                        "first_id": 8,
+                        "second_id": 6,
+                        "status": 0
+                    }, 
+                    {
+                        "first_id": 8,
+                        "second_id": 7,
+                        "status": 0
                     }
                 ]
             };
