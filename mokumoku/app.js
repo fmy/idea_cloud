@@ -1,6 +1,6 @@
 var App = (function () {
-    function App() {
-        this.controller = new control.StageController("myCanvas");
+    function App(stageID) {
+        this.controller = new control.StageController("myCanvas", stageID);
     }
     return App;
 })();

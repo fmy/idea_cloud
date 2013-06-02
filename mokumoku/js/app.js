@@ -142,9 +142,9 @@ var model;
 (function (model) {
     var StageModel = (function (_super) {
         __extends(StageModel, _super);
-        function StageModel(stage_id) {
+        function StageModel(stageID) {
                 _super.call(this);
-            this.stage_id = stage_id;
+            this.stageID = stageID;
             this.wordList = [];
             this.wordHash = {
             };
@@ -323,8 +323,8 @@ var control;
     control.StageController = StageController;    
 })(control || (control = {}));
 var App = (function () {
-    function App() {
-        this.controller = new control.StageController("myCanvas");
+    function App(stageID) {
+        this.controller = new control.StageController("myCanvas", stageID);
     }
     return App;
 })();
