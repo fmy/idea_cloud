@@ -1,4 +1,4 @@
-﻿var events;
+var events;
 (function (events) {
     var Event = (function () {
         function Event(type, value) {
@@ -156,22 +156,126 @@ var model;
             return this.wordHash[wordID];
         };
         StageModel.prototype.isConnect = function (wordA, wordB) {
-            return true;
+            var result = false;
+            for(var prop in this.connections) {
+                var connection = this.connections[prop];
+                if(connection.first_id == wordA.id && connection.second_id == wordB.id) {
+                    if(connection.status == 1) {
+                        result = true;
+                    }
+                    break;
+                }
+            }
+            return result;
         };
-        StageModel.prototype.isDisConect = function (wordA, wordB) {
-            return true;
+        StageModel.prototype.isDisConnect = function (wordA, wordB) {
+            var result = false;
+            for(var prop in this.connections) {
+                var connection = this.connections[prop];
+                if(connection.first_id == wordA.id && connection.second_id == wordB.id) {
+                    if(connection.status == -1) {
+                        result = true;
+                    }
+                    break;
+                }
+            }
+            return result;
         };
         StageModel.prototype.wordConnect = function (wordA, wordB) {
             return true;
         };
         StageModel.prototype.loadResource = function () {
             var _this = this;
-            var data = '{"id": 1,"name": "level1","words": [{"id": 1,"name": "ごはん"},{"id": 2,"name": "たらこ"},{"id": 3,"name": "パスタ"},{"id": 4,"name": "みそ汁"}]}';
-            $(JSON.parse(data).words).each(function (index, word) {
+            var json = {
+                "id": 1,
+                "name": "level1",
+                "words": [
+                    {
+                        "id": 1,
+                        "name": "ごはん"
+                    }, 
+                    {
+                        "id": 2,
+                        "name": "たらこ"
+                    }, 
+                    {
+                        "id": 3,
+                        "name": "パスタ"
+                    }, 
+                    {
+                        "id": 4,
+                        "name": "みそ汁"
+                    }
+                ],
+                "connections": [
+                    {
+                        "first_id": 1,
+                        "second_id": 2,
+                        "status": 1
+                    }, 
+                    {
+                        "first_id": 1,
+                        "second_id": 3,
+                        "status": -1
+                    }, 
+                    {
+                        "first_id": 1,
+                        "second_id": 4,
+                        "status": 1
+                    }, 
+                    {
+                        "first_id": 2,
+                        "second_id": 1,
+                        "status": 1
+                    }, 
+                    {
+                        "first_id": 2,
+                        "second_id": 3,
+                        "status": 1
+                    }, 
+                    {
+                        "first_id": 2,
+                        "second_id": 4,
+                        "status": 0
+                    }, 
+                    {
+                        "first_id": 3,
+                        "second_id": 1,
+                        "status": -1
+                    }, 
+                    {
+                        "first_id": 3,
+                        "second_id": 2,
+                        "status": 1
+                    }, 
+                    {
+                        "first_id": 3,
+                        "second_id": 4,
+                        "status": -1
+                    }, 
+                    {
+                        "first_id": 4,
+                        "second_id": 1,
+                        "status": 1
+                    }, 
+                    {
+                        "first_id": 4,
+                        "second_id": 2,
+                        "status": 0
+                    }, 
+                    {
+                        "first_id": 4,
+                        "second_id": 3,
+                        "status": -1
+                    }
+                ]
+            };
+            $(json.words).each(function (index, word) {
                 var w = new model.WordData(word.id, word.name);
                 _this.wordList.push(w);
                 _this.wordHash[w.id] = w;
             });
+            this.connections = json.connections;
             this.loadedResource();
         };
         StageModel.prototype.loadedResource = function () {
