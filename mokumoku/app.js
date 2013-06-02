@@ -4,4 +4,10 @@ var App = (function () {
     }
     return App;
 })();
+var EditApp = (function () {
+    function EditApp() {
+        this.controller = new control.StageController("myCanvas", 1);
+    }
+    return EditApp;
+})();
 //@ sourceMappingURL=app.js.map

@@ -5,3 +5,10 @@ class App {
         this.controller = new control.StageController("myCanvas", stageID);
     }
 }
+
+class EditApp {
+    controller: control.StageController;
+    constructor() {
+        this.controller = new control.StageController("myCanvas", 1);
+    }
+}
