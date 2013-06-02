@@ -8,6 +8,7 @@ Suibun::Application.routes.draw do
     get "stages/:id", to: "stages#index"
 
     match "connections/create", to: "words#create_connections"
+    match "pull", to: "pull#do"
   end
 
   # The priority is based upon order of creation:
