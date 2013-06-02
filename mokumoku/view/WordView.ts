@@ -8,14 +8,15 @@ module view {
     export class WordView extends IntaractionConainer {
         dataID: number;
         text: createjs.Text;
-        shape: createjs.Shape;
+        kumo: createjs.Bitmap;
         private size: number = 50;
         private dragPosition: createjs.Point;
         constructor(word: model.WordData) {
             super();
-            this.shape = new createjs.Shape();
-            this.text = new createjs.Text();
-            this.addChild(this.shape);
+            this.kumo = ResourceManager.getInstance().getKumo();
+            this.text = new createjs.Text("", "20px");
+            
+            this.addChild(this.kumo);
             this.addChild(this.text);
             this.dataID = word.id;
             this.toDraw();
@@ -41,8 +42,8 @@ module view {
         }
 
         private toDraw(): void {
-            this.shape.graphics.beginFill("#ff0000");
-            this.shape.graphics.drawCircle(this.size, this.size, this.size);
+            //this.kumo.graphics.beginFill("#ff0000");
+            //this.kumo.graphics.drawCircle(this.size, this.size, this.size);
             this.text.text = this.getData().name;
             this.text.x = this.size - this.text.getMeasuredWidth() / 2;
             this.text.y = this.size - this.text.getMeasuredHeight() / 2;

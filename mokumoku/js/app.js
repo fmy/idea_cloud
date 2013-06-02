@@ -70,9 +70,9 @@ var view;
             var _this = this;
                 _super.call(this);
             this.size = 50;
-            this.shape = new createjs.Shape();
-            this.text = new createjs.Text();
-            this.addChild(this.shape);
+            this.kumo = view.ResourceManager.getInstance().getKumo();
+            this.text = new createjs.Text("", "20px");
+            this.addChild(this.kumo);
             this.addChild(this.text);
             this.dataID = word.id;
             this.toDraw();
@@ -95,8 +95,6 @@ var view;
             return this.size;
         };
         WordView.prototype.toDraw = function () {
-            this.shape.graphics.beginFill("#ff0000");
-            this.shape.graphics.drawCircle(this.size, this.size, this.size);
             this.text.text = this.getData().name;
             this.text.x = this.size - this.text.getMeasuredWidth() / 2;
             this.text.y = this.size - this.text.getMeasuredHeight() / 2;
@@ -126,6 +124,10 @@ var view;
             var _this = this;
             var queue = new createjs.LoadQueue(false);
             var manifest = [
+                {
+                    id: "kumo",
+                    src: "effect/kumo.png"
+                }, 
                 {
                     id: "no01",
                     src: "se/nocon1.mp3"
@@ -186,6 +188,9 @@ var view;
         ResourceManager.prototype.getBmp = function (id) {
             return this.resource[id];
         };
+        ResourceManager.prototype.getKumo = function () {
+            return this.resource["kumo"].clone();
+        };
         return ResourceManager;
     })(createjs.EventDispatcher);
     view.ResourceManager = ResourceManager;    
@@ -231,14 +236,12 @@ var view;
             var _this = this;
             var canvas = document.getElementById(this.stageID);
             this.stage = new createjs.Stage(canvas);
-            this.model.addEventListener(events.Event.COMPLETE, function (e) {
-                _this.firstCreate();
-            });
             this.wordViewList = [];
             this.craeteEffect();
             this.createScore();
             this.resource().addEventListener("complete", function () {
                 _this.dispatchEvent(new events.Event(events.Event.COMPLETE), _this);
+                _this.firstCreate();
             });
             this.resource().load();
         };
@@ -322,6 +325,7 @@ var view;
             this.showEffect("imgBara");
             this.resource().playSE("fault0" + this.rand());
             this.model.disConnect(wordA.id, wordB.id);
+            (this.stage.getChildByName(wordA.id.toString())).resetDragPosition();
         };
         StageView.prototype.noConnectWord = function (wordA) {
             this.resource().playSE("no0" + this.rand());

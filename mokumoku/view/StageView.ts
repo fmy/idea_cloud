@@ -49,9 +49,7 @@ module view {
         private init(): void {
             var canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById(this.stageID);
             this.stage = new createjs.Stage(canvas);
-            this.model.addEventListener(events.Event.COMPLETE, (e) => {
-                this.firstCreate();
-            });
+
 
             this.wordViewList = [];
             this.craeteEffect();
@@ -60,6 +58,7 @@ module view {
 
             this.resource().addEventListener("complete", () => {
                 this.dispatchEvent(new events.Event(events.Event.COMPLETE), this);
+                this.firstCreate();
             });
             this.resource().load();
             
@@ -150,6 +149,7 @@ module view {
             this.showEffect("imgBara");
             this.resource().playSE("fault0" + this.rand());
             this.model.disConnect(wordA.id, wordB.id);
+            (<view.WordView>this.stage.getChildByName(wordA.id.toString())).resetDragPosition();
         }
 
         noConnectWord(wordA: model.WordData): void {

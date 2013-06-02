@@ -21,6 +21,7 @@ module view {
             var manifest = [
                 //{ id: "imgCon", src: "effect/con.png" },
                 //{ id: "imgBara", src: "effect/bara.png" },
+                { id:"kumo", src: "effect/kumo.png"},
                 { id: "no01", src: "se/nocon1.mp3" },
                 { id: "no02", src: "se/nocon2.mp3" },
                 { id: "no03", src: "se/nocon3.mp3" },
@@ -57,6 +58,10 @@ module view {
 
         getBmp(id: string): createjs.Bitmap {
             return this.resource[id];
+        }
+
+        getKumo(): createjs.Bitmap {
+            return this.resource["kumo"].clone();
         }
 
     }
