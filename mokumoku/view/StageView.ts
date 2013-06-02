@@ -17,7 +17,7 @@ module view {
            
             createjs.Ticker.addEventListener("tick", () => {
                 this.score.innerText = this.model.getScore().toString();
-                this.stage.update(); // 30fps‚ÅƒXƒe[ƒW‚Ì•`‰æ‚ªXV‚³‚ê‚é‚æ‚¤‚É‚È‚é
+                this.stage.update(); // 30fpsï¿½ÅƒXï¿½eï¿½[ï¿½Wï¿½Ì•`ï¿½æ‚ªï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½æ‚¤ï¿½É‚È‚ï¿½
             });
         }
 
@@ -42,6 +42,7 @@ module view {
             this.score.style.position = "absolute";
             this.score.style.right = "5px";
             this.score.style.top = "5px";
+            this.score.style.fontSize = "30px";
             document.body.appendChild(this.score);
         }
 

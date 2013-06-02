@@ -37,6 +37,7 @@ var view;
             this.score.style.position = "absolute";
             this.score.style.right = "5px";
             this.score.style.top = "5px";
+            this.score.style.fontSize = "30px";
             document.body.appendChild(this.score);
         };
         StageView.prototype.init = function () {
