@@ -28,5 +28,10 @@ module Api
       respond_with hash.to_json
     end
 
+    def add_word
+      stage = Stage.find(params[:id])
+      params[:words].split(",").each { |w| stage.add_word(w) }
+      respond_with stage.to_json
+    end
   end
 end
