@@ -1,4 +1,3 @@
-/// <reference path="control/StageController.ts" />
 var App = (function () {
     function App() {
         this.controller = new control.StageController("myCanvas");

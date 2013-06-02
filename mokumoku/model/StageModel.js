@@ -1,4 +1,4 @@
-﻿var __extends = this.__extends || function (d, b) {
+var __extends = this.__extends || function (d, b) {
     function __() { this.constructor = d; }
     __.prototype = b.prototype;
     d.prototype = new __();
@@ -11,39 +11,135 @@ var model;
                 _super.call(this);
             this.stage_id = stage_id;
             this.wordList = [];
+            this.wordHash = {
+            };
         }
         StageModel.prototype.getWordList = function () {
             return this.wordList;
         };
         StageModel.prototype.getWord = function (wordID) {
-            return null;
+            return this.wordHash[wordID];
         };
         StageModel.prototype.isConnect = function (wordA, wordB) {
-            return true;
+            for(var prop in this.connections) {
+                var connection = this.connections[prop];
+                if(connection.first_id == wordA.id && connection.second_id == wordB.id) {
+                    if(connection.status == 1) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            }
         };
-        StageModel.prototype.isDisConect = function (wordA, wordB) {
-            return true;
+        StageModel.prototype.isDisConnect = function (wordA, wordB) {
+            for(var prop in this.connections) {
+                var connection = this.connections[prop];
+                if(connection.first_id == wordA.id && connection.second_id == wordB.id) {
+                    if(connection.status == -1) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            }
         };
         StageModel.prototype.wordConnect = function (wordA, wordB) {
             return true;
         };
         StageModel.prototype.loadResource = function () {
             var _this = this;
-            //            $.ajax({
-            //                url: "http://0.0.0.0:3000/stages/" + this.stage_id,
-            //                type: "get",
-            //                dataType: "json"
-            //            }).done((data) => {
-            //                JSON.parse(data).words.each((word) => {
-            //                    var w = new WordData(word.id, word.name);
-            //                    this.wordList.push(w);
-            //                });
-            //            });
-            var data = '{"id": 1,"name": "level1","words": [{"id": 1,"name": "ã”ã¯ã‚“"},{"id": 2,"name": "ãŸã‚‰ã“"},{"id": 3,"name": "ãƒ‘ã‚¹ã‚¿"},{"id": 4,"name": "ã¿ãæ±"}]}';
-            JSON.parse(data).words.each(function (word) {
+            var json = {
+                "id": 1,
+                "name": "level1",
+                "words": [
+                    {
+                        "id": 1,
+                        "name": "ごはん"
+                    }, 
+                    {
+                        "id": 2,
+                        "name": "たらこ"
+                    }, 
+                    {
+                        "id": 3,
+                        "name": "パスタ"
+                    }, 
+                    {
+                        "id": 4,
+                        "name": "みそ汁"
+                    }
+                ],
+                "connections": [
+                    {
+                        "first_id": 1,
+                        "second_id": 2,
+                        "status": 1
+                    }, 
+                    {
+                        "first_id": 1,
+                        "second_id": 3,
+                        "status": -1
+                    }, 
+                    {
+                        "first_id": 1,
+                        "second_id": 4,
+                        "status": 1
+                    }, 
+                    {
+                        "first_id": 2,
+                        "second_id": 1,
+                        "status": 1
+                    }, 
+                    {
+                        "first_id": 2,
+                        "second_id": 3,
+                        "status": 1
+                    }, 
+                    {
+                        "first_id": 2,
+                        "second_id": 4,
+                        "status": 0
+                    }, 
+                    {
+                        "first_id": 3,
+                        "second_id": 1,
+                        "status": -1
+                    }, 
+                    {
+                        "first_id": 3,
+                        "second_id": 2,
+                        "status": 1
+                    }, 
+                    {
+                        "first_id": 3,
+                        "second_id": 4,
+                        "status": -1
+                    }, 
+                    {
+                        "first_id": 4,
+                        "second_id": 1,
+                        "status": 1
+                    }, 
+                    {
+                        "first_id": 4,
+                        "second_id": 2,
+                        "status": 0
+                    }, 
+                    {
+                        "first_id": 4,
+                        "second_id": 3,
+                        "status": -1
+                    }
+                ]
+            };
+            var data = '{"id": 1,"name": "level1","words": [{"id": 1,"name": "ごはん"},{"id": 2,"name": "たらこ"},{"id": 3,"name": "パスタ"},{"id": 4,"name": "みそ汁"}]}';
+            $(json.words).each(function (index, word) {
                 var w = new model.WordData(word.id, word.name);
                 _this.wordList.push(w);
+                _this.wordHash[w.id] = w;
             });
+            this.connections = json.connections;
             this.loadedResource();
         };
         StageModel.prototype.loadedResource = function () {

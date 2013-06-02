@@ -3,9 +3,6 @@ var __extends = this.__extends || function (d, b) {
     __.prototype = b.prototype;
     d.prototype = new __();
 };
-/// <reference path="../events/Event.ts" />
-/// <reference path="WordView.ts" />
-/// <reference path="../lib/CreateJS.d.ts" />
 var view;
 (function (view) {
     var StageView = (function (_super) {
@@ -19,8 +16,6 @@ var view;
         StageView.prototype.init = function () {
             var _this = this;
             var canvas = document.getElementById(this.stageID);
-            canvas.style.width = document.body.clientWidth + "px";
-            canvas.style.height = document.body.clientHeight + "px";
             this.stage = new createjs.Stage(canvas);
             this.model.addEventListener(events.Event.COMPLETE, function (e) {
                 _this.update();
@@ -28,22 +23,30 @@ var view;
             this.model.addEventListener(events.Event.CHANGE_PROPERTY, function (e) {
                 _this.update();
             });
-            this.wordViewList = [];
-            this.wordViewHash = {
-            };
         };
         StageView.prototype.loadResource = function () {
             this.loadedResource();
         };
         StageView.prototype.update = function () {
+            var _this = this;
             var wordList = this.model.getWordList();
+            console.log(wordList.length);
             for(var i = 0; i < wordList.length; i++) {
                 var word = wordList[i];
-                if(this.wordViewHash[word.id] == null) {
-                    this.wordViewHash[word.id] = word;
-                    wordList.push(word);
-                    this.stage.addChild(new view.WordView(word));
+                var xLength = Math.floor(this.stage.canvas.width / 120);
+                var x = i % xLength;
+                var y = Math.floor(i / xLength);
+                var wordView = this.stage.getChildByName(word.id.toString());
+                if(wordView == null) {
+                    wordView = new view.WordView(word);
                 }
+                wordView.x = x * 120;
+                wordView.y = y * 120;
+                console.log(word.name + " : " + wordView.x + " : " + wordView.y + " :: " + xLength);
+                this.stage.addChild(wordView);
+                wordView.update = function () {
+                    _this.stage.update();
+                };
             }
             this.stage.update();
         };
